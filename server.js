@@ -8,14 +8,12 @@ const connectDB = require("./DataBase/BD");
 
 const UserRoutes = require("./routes/users");
 
+require("dotenv").config();
+
 app.use(morgan("dev"));
 app.use(express.json());
 
-
 app.use("/User", UserRoutes);
-
-
-
 
 mongoose.set("strictQuery", false);
 connectDB();
