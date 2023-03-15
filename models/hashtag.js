@@ -9,7 +9,7 @@ const HashtagSchema = new mongoose.Schema ({
     } ,
     followers : {
         type : [String],
-        required:true
+        required:false
     } 
   
 })
