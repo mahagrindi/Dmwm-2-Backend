@@ -12,6 +12,8 @@ var app = express();
 
 const UserRoutes = require("./routes/users");
 
+const PostRoutes = require("./routes/Posts");
+
 const cors = require("cors");
 
 require("dotenv").config();
@@ -22,6 +24,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/User", cors(), UserRoutes);
+
+app.use("/Post", cors(), PostRoutes);
 
 mongoose.set("strictQuery", false);
 connectDB();
