@@ -16,6 +16,16 @@ exports.UserList = async (req, res) => {
   }
 };
 
+exports.findUserById = async (req, res) => {
+  const user = await User.findById(id);
+
+  if (user) {
+    return res.status(201).send(user);
+  } else {
+    return res.status(404).send("ID does not exist !!");
+  }
+};
+
 // *************************
 // ********* Inscription ***
 // *************************
@@ -48,8 +58,6 @@ exports.userInscription = async (req, res) => {
     // save user token
     user.token = token;
     res.status(201).json(token);
-    // console.log("signup posted");
-    // console.log("token", user.token);
   } catch (err) {
     res.status(401).send("signup failed");
   }
@@ -76,13 +84,12 @@ exports.userLogin = async (req, res) => {
         .compare(password, user.password)
         .then(() => {
           let token = jwt.sign(
-            { userId: User._id, email },
+            { userId: user._id, email },
             process.env.ACCES_TOKEN_KEY
           );
           user.token = token;
+          console.log(user._id);
           res.status(201).json(token);
-          //   res.send({ token });
-          //   console.log("successfully logged in");
         })
         .catch(() => res.status(401).send("Password failed"))
     : console.log("failll");
@@ -94,15 +101,13 @@ exports.userLogin = async (req, res) => {
 // *********************************
 
 exports.forgotPassword = async (req, res, next) => {
-  // console.log(req.email);
   try {
     if (!req.body.email) {
       return res.status(404).send("Email is required");
     }
     //get user based on POSTed email
     const user = await User.findOne({ email: req.body.email });
-    // console.log("req.body.email", req.body.email);
-    // console.log(user);
+
     if (!user) {
       return res.status(409).send("User does not exist");
     }
@@ -110,13 +115,8 @@ exports.forgotPassword = async (req, res, next) => {
     const resetToken = user.createPasswordResetToken();
     await user.save({ validateBeforeSave: false });
 
-    //send it to user's email
-    // const resetURL = `http://${req.get(
-    //   "host"
-    // )}/user/resetPassword/${resetToken}`;
     const resetURL = `http://localhost:4200/#/reset/${resetToken}`;
-    // const message = `|Forgot your password ? \n submit a PATCH request with your new password and passwordConfirm tp : ${resetURL}\n
-    //    If you didn't forget your password, please ignore this emai!`;
+
     const my_html = `<html>        
      <body>
         <p>Hi ${user.name},</p>          
@@ -154,7 +154,6 @@ exports.forgotPassword = async (req, res, next) => {
 
     // console.log("{ reset token :", resetToken, "}","user.passwordResetToken", user.passwordResetToken);
   } catch (err) {
-    // console.error(err);
     res.status(500).send("An error occurred");
   }
 };
@@ -173,23 +172,34 @@ exports.resetPassword = async (req, res, next) => {
 
     // If no user is found, return an error response
     if (!user) {
-      console.log("enter in 400");
       return res.status(400).json({ message: "Token invalid or expired" });
     }
-    console.log("enter after 400");
+
     // Set the new password and remove the reset token and expiration time
     console.log("req body pass", req.body.password);
     user.password = await bcrypt.hash(req.body.password, 10);
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
+
     user.save();
+    UEmail = user.email;
+    // Create token
+    const newtoken = jwt.sign(
+      { user_id: user._id, UEmail },
+      process.env.ACCES_TOKEN_KEY
+    );
+    // save user token
+    user.token = newtoken;
+    // res.status(201).json(token);
 
     // Return a success message
-    console.log("Password reset successfully");
-    return res.status(200).json({ message: "Password reset successfully" });
+
+    return res
+      .status(200)
+      .json({ message: "Password reset successfully", token: newtoken });
   } catch (error) {
     console.error(error);
-    console.log("Password reset failed");
+
     // Return an error message
     return res.status(500).json({ message: "Password reset failed" });
   }
