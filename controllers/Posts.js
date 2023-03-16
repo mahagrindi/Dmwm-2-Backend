@@ -1,6 +1,64 @@
 const express = require("express");
 const router = express.Router();
 const Hashtag = require("../models/hashtag");
+const path = require("path");
+const fs = require("fs");
+var imgModel = require("../models/Image");
+var publicationModel = require("../models/publication");
+
+// Step 7 - the GET request handler that provides the HTML UI
+
+exports.getPublication = async (req, res) => {
+  try {
+    const items = await publicationModel.find({});
+    res.status(200).send(items);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("An error occurred", err);
+  }
+};
+
+exports.PostPublication = async (req, res) => {
+  console.log(req.files.image[0]);
+  const options = {month: "2-digit", day: "2-digit", year: "numeric"};
+  const currentDate = new Date().toLocaleString(options);
+  for (const tag of req.body.tag) {
+    const existingTag = await Hashtag.findOne({tag_name: tag});
+    if (!existingTag) {
+      // If tag doesn't exist, create a new tag and save it to the database
+      const newTag = new Hashtag();
+      newTag.tag_name = tag;
+      await newTag.save();
+    }
+  }
+  
+  var obj = {
+    Id_user: req.body.Id_user,
+    text: req.body.text,
+    date: currentDate,
+
+    img: {
+      data: fs.readFileSync(
+        path.join(
+          path.dirname(require.main.filename),
+          "uploads",
+          req.files.image[0].filename
+        )
+      ),
+      contentType: "image/png",
+    },
+    hashtag :  req.body.tag   ,
+  };
+  publicationModel.create(obj, (err, item) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send("not ok " + err);
+    } else {
+      // item.save();
+      res.status(200).send("ok");
+    }
+  });
+};
 
 // *************************
 // ********* tags ***********
@@ -16,111 +74,40 @@ exports.GetTag = async (req, res) => {
     }
   });
 };
-
 exports.AddTags = async (req, res) => {
-     const {tagname} = req.body;
-     try {
-       if (!tagname) {
-         return res.status(400).json({
-           errorMessage: "Tag name is required",
-         });
-       }
-       
-       const tag = await Hashtag.findOne({tag_name: tagname});
-       if (tag) {
-         return res.status(200).json({
-           SuccessMessage: "Tag already exists",
-         });
-       } else {
-         const NewTag = new Hashtag();
-   
-         NewTag.tag_name = tagname;
-   
-         await NewTag.save();
-         return res.status(200).json({
-           SuccessMessage: "New tag added",
-         });
-       }
-     } catch (err) {
-       return res.status(500).json({
-         errorMessage: "Please try again later" + err,
-       });
-     }
-   };
-   
-
-
-
-
-
-
-
-   
-
-const mongodb = require("mongodb");
-const multer = require("multer");
-// ****************************************************
-// ********* uplode image / file to mongoDB ***********
-// ****************************************************
-const GridFSBucket = mongodb.GridFSBucket;
-const fs = require("fs");
-// Create storage engine
-const storage = multer.memoryStorage();
-const connectDB = require("../DataBase/BD");
-const mongoose = require("mongoose");
-
-const connection = mongoose.connection;
-// Init upload
-const upload = multer({
-  storage: storage,
-}).single("image");
-
-// Initialize gfs when the connection to the database is open
-exports.UplodeFile = async (req, res) => {
-  const gfs = new GridFSBucket(connection.db, {
-    bucketName: "images",
-  });
-
-  if (!req.file) {
-    res.status(400).json({error: "File upload unsuccessfuls"});
-    return;
-  }
-
-  const writestream = gfs.openUploadStreamWithId(
-    req.file.originalname,
-    req.file.id,
-    {
-      contentType: req.file.mimetype,
-    }
-  );
-
-  writestream.on("error", (err) => {
-    console.error(err);
-    res.status(400).json({error: "File upload unsuccessfuli" + err});
-  });
-
-  writestream.on("finish", () => {
-    console.log("Image uploaded successfully");
-    res.json({id: req.file.id});
-  });
-
-  writestream.write(req.file.buffer);
-  writestream.end();
-};
-
-// ****************************************************
-// ********* get image / file to mongoDB  *************
-// ****************************************************
-
-exports.GetFile = async (req, res) => {
-  const filename = req.params.filename;
-  gfs.find({filename: filename}).toArray((err, files) => {
-    if (!files || files.length === 0) {
-      return res.status(404).json({
-        error: "No file found",
+  // Extract the tag name from the request b
+  const {tagname} = req.body;
+  console.log(req.body);
+  const {tagn} = req.params;
+  // Add this line to log the request body
+  try {
+    if (!tagn) {
+      return res.status(400).json({
+        errorMessage: "Tag name is required",
       });
     }
-    const readstream = gfs.openDownloadStreamByName(filename);
-    readstream.pipe(res);
-  });
+
+    // Check if tag already exists
+    const existingTag = await Hashtag.findOne({tag_name: tagn});
+    if (existingTag) {
+      // If tag already exists, return a success response
+      return res.status(200).json({
+        SuccessMessage: "Tag already exists",
+      });
+    } else {
+      // If tag doesn't exist, create a new tag and save it to the database
+      const newTag = new Hashtag();
+      newTag.tag_name = tagn;
+      await newTag.save();
+      // Return a success response
+      return res.status(200).json({
+        SuccessMessage: "New tag added",
+      });
+    }
+  } catch (err) {
+    // If there was an error, return an error response
+    return res.status(500).json({
+      errorMessage: "Please try again later" + err,
+    });
+  }
 };

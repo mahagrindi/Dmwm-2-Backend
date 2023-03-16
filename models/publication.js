@@ -2,7 +2,7 @@
 let mongoose = require ('mongoose');
 const PublicationSchema = new mongoose.Schema ({
  
-    id_user :{
+    Id_user :{
         type : String ,
         required : true 
     },
@@ -15,25 +15,26 @@ const PublicationSchema = new mongoose.Schema ({
         required:true
     },
   
-    images : {
-        type : [String],
-        required:true
-    },
+    img:
+	{
+		data: Buffer,
+		contentType: String
+	},
     reaction : {
         type : [Object],
-        required:true
+        required:false
     }, 
     commentaires : {
         type : [Object],
-        required:true
+        required:false
     },
     republier : {
         type : [Object],
-        required:true
+        required:false
     },
     hashtag : {
         type : [Object],
-        required:true
+        required:false
     },
     
   
