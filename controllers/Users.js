@@ -17,7 +17,12 @@ exports.UserList = async (req, res) => {
 };
 
 exports.findUserById = async (req, res) => {
-  const user = await User.findById(id);
+  const id = req.params.id;
+  let user = null;
+  await User.findOne({ _id: id }).then(
+    (res) => (user = res),
+    (err) => console.log(err)
+  );
 
   if (user) {
     return res.status(201).send(user);
