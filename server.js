@@ -1,10 +1,14 @@
-const express = require("express");
-const app = express();
-const mongoose = require("mongoose");
-
-const morgan = require("morgan");
-
+require("dotenv").config();
+require("http-errors");
+var express = require("express");
+var path = require("path");
+var cookieParser = require("cookie-parser");
+var morgan = require("morgan"); //morgan--dev return in cmd api source
+var helmet = require("helmet"); //cashe source request
+const { default: mongoose } = require("mongoose");
 const connectDB = require("./DataBase/BD");
+
+var app = express();
 
 const UserRoutes = require("./routes/users");
 
@@ -27,6 +31,9 @@ app.set("view engine", "ejs");
 
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/User", cors(), UserRoutes);
 

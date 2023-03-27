@@ -47,7 +47,7 @@ exports.userInscription = async (req, res) => {
       console.log("hello else");
       //Encrypt user password
       encryptedPassword = await bcrypt
-        .hash(password, 10)
+        .hash(password, parseInt(process.env.SALT))
         .catch((error) => console.log(error));
 
       // Create user in our database
@@ -187,7 +187,10 @@ exports.resetPassword = async (req, res, next) => {
 
     // Set the new password and remove the reset token and expiration time
     console.log("req body pass", req.body.password);
-    user.password = await bcrypt.hash(req.body.password, 10);
+    user.password = await bcrypt.hash(
+      req.body.password,
+      parseInt(process.env.SALT)
+    );
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
 
