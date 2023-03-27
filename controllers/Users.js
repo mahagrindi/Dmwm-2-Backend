@@ -35,34 +35,39 @@ exports.findUserById = async (req, res) => {
 // ********* Inscription ***
 // *************************
 exports.userInscription = async (req, res) => {
+  const { firstname, lastname, email, password, bio } = req.body;
+  const oldUser = await User.findOne({ email });
   try {
-    const { firstname, lastname, email, password, bio } = req.body;
     // check if user already exist
     // Validate if user exist in our database
-    const oldUser = await User.findOne({ email });
+
     if (oldUser) {
       return res.status(409).send("User Already Exist. Please Login");
+    } else {
+      console.log("hello else");
+      //Encrypt user password
+      encryptedPassword = await bcrypt
+        .hash(password, 10)
+        .catch((error) => console.log(error));
+
+      // Create user in our database
+      const user = await User.create({
+        firstname,
+        lastname,
+        email: email.toLowerCase(), // sanitize: convert email to lowercase
+        password: encryptedPassword,
+        bio,
+      });
+
+      // Create token
+      const token = jwt.sign(
+        { _id: user._id, email: email },
+        process.env.ACCES_TOKEN_KEY
+      );
+      // save user token
+      user.token = token;
+      res.status(201).json(token);
     }
-    //Encrypt user password
-    encryptedPassword = await bcrypt.hash(password, 10);
-
-    // Create user in our database
-    const user = await User.create({
-      firstname,
-      lastname,
-      email: email.toLowerCase(), // sanitize: convert email to lowercase
-      password: encryptedPassword,
-      bio,
-    });
-
-    // Create token
-    const token = jwt.sign(
-      { user_id: user._id, email },
-      process.env.ACCES_TOKEN_KEY
-    );
-    // save user token
-    user.token = token;
-    res.status(201).json(token);
   } catch (err) {
     res.status(401).send("signup failed");
   }
@@ -89,7 +94,7 @@ exports.userLogin = async (req, res) => {
         .compare(password, user.password)
         .then(() => {
           let token = jwt.sign(
-            { userId: user._id, email },
+            { _id: user._id, email: email },
             process.env.ACCES_TOKEN_KEY
           );
           user.token = token;
@@ -190,7 +195,7 @@ exports.resetPassword = async (req, res, next) => {
     UEmail = user.email;
     // Create token
     const newtoken = jwt.sign(
-      { user_id: user._id, UEmail },
+      { _id: user._id, email: UEmail },
       process.env.ACCES_TOKEN_KEY
     );
     // save user token

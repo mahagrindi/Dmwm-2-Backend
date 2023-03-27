@@ -14,19 +14,16 @@ const cors = require("cors");
 
 require("dotenv").config();
 
- 
-var bodyParser = require('body-parser');
- 
-var fs = require('fs');
-var path = require('path');
- 
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
- 
+var bodyParser = require("body-parser");
+
+var fs = require("fs");
+var path = require("path");
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 // Set EJS as templating engine
 app.set("view engine", "ejs");
-
-
 
 app.use(morgan("dev"));
 app.use(express.json());
