@@ -19,10 +19,10 @@ exports.getPublication = async (req, res) => {
 };
 
 exports.PostPublication = async (req, res) => {
-  const options = {month: "2-digit", day: "2-digit", year: "numeric"};
+  const options = { month: "2-digit", day: "2-digit", year: "numeric" };
   const currentDate = new Date().toLocaleString(options);
   for (const tag of req.body.tag) {
-    const existingTag = await Hashtag.findOne({tag_name: tag});
+    const existingTag = await Hashtag.findOne({ tag_name: tag });
     if (!existingTag) {
       // If tag doesn't exist, create a new tag and save it to the database
       const newTag = new Hashtag();
@@ -33,35 +33,32 @@ exports.PostPublication = async (req, res) => {
   console.log("1");
 
   var ImgList = [];
- 
-    
-for ( var element of req.files.image ){
-    let img =  new imgModel ({
 
-      name : element.filename ,
-      img : {
-
+  for (var element of req.files.image) {
+    let img = new imgModel({
+      name: element.filename,
+      img: {
         data: fs.readFileSync(
-          path.join(path.dirname(require.main.filename),"uploads",element.filename   )
+          path.join(
+            path.dirname(require.main.filename),
+            "uploads",
+            element.filename
+          )
         ),
         contentType: "image/png",
-    
-      }
+      },
     });
-  console.log("2");
+    console.log("2");
 
-    await img.save().then ( res => {
+    await img.save().then((res) => {
       console.log(res._id);
-        ImgList.push( res._id);
+      ImgList.push(res._id);
       console.log(ImgList);
- 
-    })
-  
-
+    });
   }
   console.log("3");
   console.log(ImgList);
-  var post = new publicationModel ({
+  var post = new publicationModel({
     Id_user: req.body.Id_user,
     text: req.body.text,
     date: currentDate,
@@ -69,27 +66,16 @@ for ( var element of req.files.image ){
     img: ImgList,
     hashtag: req.body.tag,
   });
-  
-  post.save().then( (resulat) => {
-    res.status(200).send("post added ");
-  })
 
+  post.save().then((resulat) => {
+    res.status(200).send("post added ");
+  });
 };
 
 exports.getAllImages = async (req, res) => {
-  try {
-    const images = await imgModel.find();
-    res.setHeader('Content-Type', 'image/jpeg');
-    for (const image of images) {
-      res.write(image.img.data);
-    }
-    res.end();
-  } catch (error) {
-    console.log(error);
-    res.status(500).send('Server Error');
-  }
+  const images = await imgModel.find();
+  res.status(200).send(images);
 };
-
 
 /* exports.getAllImages = async (req, res) => {
   try {
@@ -127,9 +113,9 @@ exports.GetTag = async (req, res) => {
 };
 exports.AddTags = async (req, res) => {
   // Extract the tag name from the request b
-  const {tagname} = req.body;
+  const { tagname } = req.body;
   console.log(req.body);
-  const {tagn} = req.params;
+  const { tagn } = req.params;
   // Add this line to log the request body
   try {
     if (!tagn) {
@@ -139,7 +125,7 @@ exports.AddTags = async (req, res) => {
     }
 
     // Check if tag already exists
-    const existingTag = await Hashtag.findOne({tag_name: tagn});
+    const existingTag = await Hashtag.findOne({ tag_name: tagn });
     if (existingTag) {
       // If tag already exists, return a success response
       return res.status(200).json({

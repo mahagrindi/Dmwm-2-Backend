@@ -3,7 +3,7 @@ import requests
 
 
 def home(request):
-    response = requests.get('http://localhost:5000/user/UserList')
+    response = requests.get('http://localhost:5000/Posts/getImages')
     data = response.json()
     print(data)
     return HttpResponse("Hello, Django!")
