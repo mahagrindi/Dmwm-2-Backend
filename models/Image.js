@@ -5,14 +5,19 @@ var mongoose = require('mongoose');
 
 var imageSchema = new mongoose.Schema({
 	name: String,
-	desc: String,
+	//desc: String,
 	img:
 	{
 		data: Buffer,
 		contentType: String
 	}
+	
 });
 
+imageSchema.pre("save", function(next) {
+	next();
+ });
 //Image is a model which has a schema imageSchema
 
-module.exports = new mongoose.model('Image', imageSchema);
+const Image = mongoose.model('Image',imageSchema);
+module.exports = Image;

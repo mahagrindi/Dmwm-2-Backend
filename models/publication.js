@@ -17,8 +17,8 @@ const PublicationSchema = new mongoose.Schema ({
   
     img:
 	{
-		data: Buffer,
-		contentType: String
+        type : [String],
+        required : false 
 	},
     reaction : {
         type : [Object],
@@ -39,7 +39,9 @@ const PublicationSchema = new mongoose.Schema ({
     
   
 })
-
+PublicationSchema.pre("save", function(next) {
+	next();
+ });
 
 const Publication = mongoose.model('Publication',PublicationSchema);
 module.exports = Publication;
