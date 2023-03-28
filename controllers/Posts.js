@@ -35,19 +35,7 @@ exports.PostPublication = async (req, res) => {
   var ImgList = [];
 
   for (var element of req.files.image) {
-    let img = new imgModel({
-      name: element.filename,
-      img: {
-        data: fs.readFileSync(
-          path.join(
-            path.dirname(require.main.filename),
-            "uploads",
-            element.filename
-          )
-        ),
-        contentType: "image/png",
-      },
-    });
+    c
     console.log("2");
 
     await img.save().then((res) => {
