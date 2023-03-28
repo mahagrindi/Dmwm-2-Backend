@@ -14,6 +14,5 @@ const HashtagSchema = new mongoose.Schema ({
   
 })
 
-
-const Hashtag = mongoose.model('Hashtag',HashtagSchema);
+const Hashtag = mongoose.model("Hashtag", HashtagSchema);
 module.exports = Hashtag;

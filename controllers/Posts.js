@@ -71,18 +71,12 @@ exports.PostPublication = async (req, res) => {
     res.status(200).send("post added ");
   });
 };
- 
-
- exports.getAllImages = async (req, res) => {
-  // pour test 
-  //http://localhost:5000/Posts/getPublication?page=2
-  const PAGE_SIZE = 10;
+exports.getAllImages = async (req, res) => {
   const page = req.query.page || 1;
 
   try {
     const images = await imgModel.find()
-      .skip((page - 1) )
-      ;
+      .skip((page - 1))
 
     res.setHeader('Content-Type', 'image/jpeg');
 
@@ -96,7 +90,8 @@ exports.PostPublication = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
- 
+
+
 /* exports.getAllImages = async (req, res) => {
   
   try {
