@@ -1,6 +1,6 @@
 let mongoose = require("mongoose");
 const PublicationSchema = new mongoose.Schema({
-  id_user: {
+  Id_user: {
     type: String,
     required: true,
   },
@@ -13,26 +13,29 @@ const PublicationSchema = new mongoose.Schema({
     required: true,
   },
 
-  images: {
+  img: {
     type: [String],
-    required: true,
+    required: false,
   },
   reaction: {
     type: [Object],
-    required: true,
+    required: false,
   },
   commentaires: {
     type: [Object],
-    required: true,
+    required: false,
   },
   republier: {
     type: [Object],
-    required: true,
+    required: false,
   },
   hashtag: {
     type: [Object],
-    required: true,
+    required: false,
   },
+});
+PublicationSchema.pre("save", function (next) {
+  next();
 });
 
 const Publication = mongoose.model("Publication", PublicationSchema);
