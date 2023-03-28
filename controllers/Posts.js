@@ -84,7 +84,22 @@ exports.getAllImages = async (req, res) => {
       res.write(image.img.data);
     }
 
-    res.end();
+    
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Server Error');
+  }
+};
+
+exports.getAllImages_v2 = async (req, res) => {
+   
+  try {
+    const images = await imgModel.find()
+    
+
+    res.send(images);
+
+    
   } catch (error) {
     console.log(error);
     res.status(500).send('Server Error');
