@@ -31,12 +31,29 @@ exports.findUserById = async (req, res) => {
   }
 };
 
+exports.findUserByUsername = async (req, res) => {
+  const username = req.params.username;
+  let user = null;
+  await User.findOne({ username: username }).then(
+    (res) => (user = res),
+    (err) => console.log(err)
+  );
+
+  if (user) {
+    return res.status(201).send(user);
+  } else {
+    return res.status(404).send("username does not exist !!");
+  }
+};
+
 // *************************
 // ********* Inscription ***
 // *************************
 exports.userInscription = async (req, res) => {
-  const { firstname, lastname, email, password, bio } = req.body;
-  const oldUser = await User.findOne({ email });
+  const { firstname, lastname, email, password, bio, liens, username } =
+    req.body;
+  const oldUser = await User.findOne({ email: req.body.email });
+  console.log("old user", req.body.email);
   try {
     // check if user already exist
     // Validate if user exist in our database
@@ -51,12 +68,17 @@ exports.userInscription = async (req, res) => {
         .catch((error) => console.log(error));
 
       // Create user in our database
+      // Split the email string at the "@" symbol
+      const parts = email.split("@");
+
       const user = await User.create({
         firstname,
         lastname,
-        email: email.toLowerCase(), // sanitize: convert email to lowercase
+        email: email, // sanitize: convert email to lowercase
         password: encryptedPassword,
         bio,
+        liens,
+        username: parts[0],
       });
 
       // Create token
@@ -67,6 +89,7 @@ exports.userInscription = async (req, res) => {
       // save user token
       user.token = token;
       res.status(201).json(token);
+      console.log(user.username);
     }
   } catch (err) {
     res.status(401).send("signup failed");
@@ -88,7 +111,7 @@ exports.userLogin = async (req, res) => {
     res.status(400).send("All input is required");
   }
   // Validate if user exist in our database
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email: req.body.email });
   user
     ? bcrypt
         .compare(password, user.password)
