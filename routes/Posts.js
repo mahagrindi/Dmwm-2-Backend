@@ -8,11 +8,12 @@ const PostControllers = require("../controllers/Posts");
 const upload = require("../Midellware/multer");
 
 //router.get("/GetFile", PostControllers.GetFile);
-router.get("/getPublication", PostControllers.getAllImages);
+router.get("/getImages", PostControllers.getAllImages);
+
 
 router.post(
   "/PostPublication",
-  upload.fields([{name: "image"}]),
+  upload.fields([{ name: "image" }]),
   PostControllers.PostPublication
 );
 
