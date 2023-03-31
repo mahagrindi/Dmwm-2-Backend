@@ -21,7 +21,7 @@ def home(request):
 def yosra(request):
     
     # Retrieve the list of images from http://localhost:5000/Posts/getImages
-    response = requests.get('http://localhost:5000/Posts/getImages?page=2')
+    response = requests.get('http://localhost:5000/Posts/getImages?page=20')
     
     # Extract the image data from the response
     image_data = io.BytesIO(response.content).getvalue()
@@ -31,8 +31,7 @@ def yosra(request):
 
 
 
-
-
+""" 
 def yosra_v2(request):
     # Fetch the images from the API
     response = requests.get('http://localhost:5000/Posts/getImages')
@@ -44,3 +43,4 @@ def yosra_v2(request):
     # Render the image on a webpage using Django's HttpResponse
     return HttpResponse(first_image, content_type='image/png')
     
+ """

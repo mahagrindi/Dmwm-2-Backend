@@ -10,10 +10,9 @@ const upload = require("../Midellware/multer");
 //router.get("/GetFile", PostControllers.GetFile);
 router.get("/getImages", PostControllers.getAllImages);
 
-
 router.post(
   "/PostPublication",
-  upload.fields([{ name: "image" }]),
+  upload.fields([{name: "images"}]),
   PostControllers.PostPublication
 );
 
