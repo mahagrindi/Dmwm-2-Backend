@@ -22,24 +22,38 @@ exports.PostPublication = async (req, res) => {
   const options = { month: "2-digit", day: "2-digit", year: "numeric" };
   //  const currentDate = new Date().toLocaleString(options);
   let currentDate = Date.now();
-  console.log(req.body.hashtags);
-  if (req.body.hashtags) {
-    for (const tag of req.body.hashtags) {
-      const existingTag = await Hashtag.findOne({ tag_name: tag });
-      if (!existingTag) {
-        console.log(tag);
-
-        // If tag doesn't exist, create a new tag and save it to the database
-        const newTag = new Hashtag();
-        newTag.tag_name = tag;
-        await newTag.save();
-      }
+  
+  var hashtagList = [];
+  if(req.body.hashtags){
+   // Convert hashtags to an array if it's not already an array
+   const hashtags = Array.isArray(req.body.hashtags) ? req.body.hashtags : [req.body.hashtags];
+  
+   for (const tag of hashtags) {
+    const existingTag = await Hashtag.findOne({ tag_name: tag });
+    let tagId;
+  
+    if (!existingTag) {
+      // If tag doesn't exist, create a new tag and save it to the database
+      const newTag = new Hashtag();
+      newTag.tag_name = tag;
+      newTag.copyrightChecked = req.body.copyrightChecked;
+      await newTag.save();
+      tagId = newTag._id;
+    } else {
+      // If tag exists, get its ID
+      tagId = existingTag._id;
     }
+  
+    // Add the ID to the list of hashtags for the post
+    hashtagList.push(tagId);
   }
+}
+  
+  console.log(hashtagList);
   console.log("1");
 
   var ImgList = [];
-
+ if( req.files.images){
   for (var element of req.files.images) {
     let img = new imgModel({
       name: element.filename,
@@ -61,7 +75,7 @@ exports.PostPublication = async (req, res) => {
       ImgList.push(res._id);
       console.log(ImgList);
     });
-  }
+  }}
   console.log("3");
   console.log(ImgList);
   var post = new publicationModel({
@@ -70,12 +84,14 @@ exports.PostPublication = async (req, res) => {
     date: currentDate,
 
     img: ImgList,
-    hashtag: req.body.hashtags,
+    hashtag: hashtagList ,
   });
 
-  post.save().then((resulat) => {
-    res.status(200).send("post added ");
-  });
+  
+  post.save().then((result) => {
+  res.status(200).json({ message: "post added" });
+});
+
 };
 exports.getAllImages = async (req, res) => {
   const page = req.query.page || 1;

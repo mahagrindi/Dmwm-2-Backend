@@ -10,6 +10,10 @@ var imageSchema = new mongoose.Schema({
 	{
 		data: Buffer,
 		contentType: String
+	},
+	copyrightChecked : {
+		type: String ,
+		required: false,
 	}
 	
 });
