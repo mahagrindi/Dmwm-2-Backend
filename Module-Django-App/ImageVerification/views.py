@@ -37,5 +37,17 @@ def yosra(request):
 #     print(first_image)
 #     image_data = io.BytesIO(first_image).getvalue()
 
-#     # Render the image on a webpage using Django's HttpResponse
-#     return HttpResponse(image_data, content_type='image/png')
+
+""" 
+def yosra_v2(request):
+    # Fetch the images from the API
+    response = requests.get('http://localhost:5000/Posts/getImages')
+    images = response.json()
+    
+    # Get the first image from the list of images
+    first_image = images[1]['img']['data']
+    
+    # Render the image on a webpage using Django's HttpResponse
+    return HttpResponse(first_image, content_type='image/png')
+    
+ """

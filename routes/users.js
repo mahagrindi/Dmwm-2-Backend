@@ -8,6 +8,7 @@ const UserControllers = require("../controllers/Users");
 
 router.get("/UserList", UserControllers.UserList);
 router.get("/getUserById/:id", UserControllers.findUserById);
+router.get("/getUserByUsername/:username", UserControllers.findUserByUsername);
 router.post("/inscription", UserControllers.userInscription);
 router.post("/login", UserControllers.userLogin);
 router.post("/forgotPassword", UserControllers.forgotPassword);

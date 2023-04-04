@@ -2,7 +2,7 @@ let mongoose = require("mongoose");
 const PublicationSchema = new mongoose.Schema({
   Id_user: {
     type: String,
-    required: true,
+    required: false,
   },
   text: {
     type: String,

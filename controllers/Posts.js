@@ -20,21 +20,27 @@ exports.getPublication = async (req, res) => {
 
 exports.PostPublication = async (req, res) => {
   const options = { month: "2-digit", day: "2-digit", year: "numeric" };
-  const currentDate = new Date().toLocaleString(options);
-  for (const tag of req.body.tag) {
-    const existingTag = await Hashtag.findOne({ tag_name: tag });
-    if (!existingTag) {
-      // If tag doesn't exist, create a new tag and save it to the database
-      const newTag = new Hashtag();
-      newTag.tag_name = tag;
-      await newTag.save();
+  //  const currentDate = new Date().toLocaleString(options);
+  let currentDate = Date.now();
+  console.log(req.body.hashtags);
+  if (req.body.hashtags) {
+    for (const tag of req.body.hashtags) {
+      const existingTag = await Hashtag.findOne({ tag_name: tag });
+      if (!existingTag) {
+        console.log(tag);
+
+        // If tag doesn't exist, create a new tag and save it to the database
+        const newTag = new Hashtag();
+        newTag.tag_name = tag;
+        await newTag.save();
+      }
     }
   }
   console.log("1");
 
   var ImgList = [];
 
-  for (var element of req.files.image) {
+  for (var element of req.files.images) {
     let img = new imgModel({
       name: element.filename,
       img: {
@@ -64,7 +70,7 @@ exports.PostPublication = async (req, res) => {
     date: currentDate,
 
     img: ImgList,
-    hashtag: req.body.tag,
+    hashtag: req.body.hashtags,
   });
 
   post.save().then((resulat) => {
