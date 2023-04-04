@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from ImageVerification import views
 urlpatterns = [
-    path("", views.home, name="home"),
-    path("yosra", views.yosra, name="yosra"),
+    path("home", views.home, name="home"),
+    path("", views.yosra, name="yosra"),
     path('admin/', admin.site.urls),
 ]

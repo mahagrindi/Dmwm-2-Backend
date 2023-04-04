@@ -19,10 +19,10 @@ exports.getPublication = async (req, res) => {
 };
 
 exports.PostPublication = async (req, res) => {
-  const options = {month: "2-digit", day: "2-digit", year: "numeric"};
+  const options = { month: "2-digit", day: "2-digit", year: "numeric" };
   const currentDate = new Date().toLocaleString(options);
   for (const tag of req.body.tag) {
-    const existingTag = await Hashtag.findOne({tag_name: tag});
+    const existingTag = await Hashtag.findOne({ tag_name: tag });
     if (!existingTag) {
       // If tag doesn't exist, create a new tag and save it to the database
       const newTag = new Hashtag();
@@ -75,37 +75,25 @@ exports.getAllImages = async (req, res) => {
   const page = req.query.page || 1;
 
   try {
-    const images = await imgModel.find()
-      .skip((page - 1))
-
-    res.setHeader('Content-Type', 'image/jpeg');
-
-    for (const image of images) {
-      res.write(image.img.data);
-    }
-
-    
-  } catch (error) {
-    console.log(error);
-    res.status(500).send('Server Error');
-  }
-};
-
-exports.getAllImages_v2 = async (req, res) => {
-   
-  try {
-    const images = await imgModel.find()
-    
-
+    const images = await imgModel.find().skip();
+    console.log(images);
     res.send(images);
-
-    
   } catch (error) {
     console.log(error);
-    res.status(500).send('Server Error');
+    res.status(500).send("Server Error");
   }
 };
 
+// exports.getAllImages = async (req, res) => {
+//   try {
+//     const images = await imgModel.find();
+
+//     res.send(images);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send("Server Error");
+//   }
+// };
 
 /* exports.getAllImages = async (req, res) => {
   
@@ -160,9 +148,9 @@ exports.GetTag = async (req, res) => {
 };
 exports.AddTags = async (req, res) => {
   // Extract the tag name from the request b
-  const {tagname} = req.body;
+  const { tagname } = req.body;
   console.log(req.body);
-  const {tagn} = req.params;
+  const { tagn } = req.params;
   // Add this line to log the request body
   try {
     if (!tagn) {
@@ -172,7 +160,7 @@ exports.AddTags = async (req, res) => {
     }
 
     // Check if tag already exists
-    const existingTag = await Hashtag.findOne({tag_name: tagn});
+    const existingTag = await Hashtag.findOne({ tag_name: tagn });
     if (existingTag) {
       // If tag already exists, return a success response
       return res.status(200).json({
