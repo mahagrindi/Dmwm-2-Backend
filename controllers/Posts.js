@@ -5,7 +5,7 @@ const path = require("path");
 const fs = require("fs");
 var imgModel = require("../models/Image");
 var publicationModel = require("../models/publication");
-
+const axios = require('axios');
 // Step 7 - the GET request handler that provides the HTML UI
 
 exports.getImage = async (req, res) => {
@@ -81,11 +81,27 @@ exports.PostPublication = async (req, res) => {
         contentType: "image/png",
       },
     });
+
+    
+axios.post('http://127.0.0.1:8000', {
+  image: img
+})
+  .then( async (response) => {
+    console.log(response.data);
     await img.save().then((res) => {
       console.log(res._id);
       ImgList.push(res._id);
       console.log(ImgList);
     });
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
+ 
+   
+    
+   
   }}
   var post = new publicationModel({
     Id_user: req.body.Id_user,
@@ -105,26 +121,10 @@ exports.PostPublication = async (req, res) => {
 
 
 exports.getAllImages = async (req, res) => {
-  const page = req.query.page || 1;
-
-  try {
-    const images = await imgModel.find().skip(page - 1);
-    for (const image of images) {
-      res.send(image.img.data);
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Server Error");
-  }
-};
-
-exports.getAllImages_v2 = async (req, res) => {
   try {
     const images = await imgModel.find();
-
     res.send(images);
   } catch (error) {
-    console.log(error);
     res.status(500).send("Server Error");
   }
 };

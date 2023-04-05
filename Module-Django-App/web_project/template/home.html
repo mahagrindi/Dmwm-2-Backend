@@ -1,10 +1,17 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Home</title>
-</head>
-<body>
-    <img src="data:image/png;base64,{{ encoded_image }}" alt="Image">
-        
-</body>
+  <head>
+    <title>Image List</title>
+  </head>
+  <body>
+    <h1>Image List</h1>
+    <ul>
+      <!-- {% for image in images %} -->
+      <li>
+        <!-- <img src="data:data:image/png;base64,{{image}}" /> -->
+        <p>{{response}}</p>
+      </li>
+      <!-- {% endfor %} -->
+    </ul>
+  </body>
 </html>
