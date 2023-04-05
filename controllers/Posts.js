@@ -73,74 +73,18 @@ exports.PostPublication = async (req, res) => {
     hashtag: req.body.hashtags,
   });
 
-  post.save().then((resulat) => {
+  post.save().then(() => {
     res.status(200).send("post added ");
   });
 };
 exports.getAllImages = async (req, res) => {
-  const page = req.query.page || 1;
-
   try {
-    const images = await imgModel.find().skip();
-    console.log(images);
+    const images = await imgModel.find();
     res.send(images);
   } catch (error) {
-    console.log(error);
     res.status(500).send("Server Error");
   }
 };
-
-// exports.getAllImages = async (req, res) => {
-//   try {
-//     const images = await imgModel.find();
-
-//     res.send(images);
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send("Server Error");
-//   }
-// };
-
-/* exports.getAllImages = async (req, res) => {
-  
-  try {
-    const images = await imgModel.find();
-    res.setHeader("Content-Type", "image/jpeg");
-    for (const image of images) {
-      const img = `<img src="data:${image.contentType};base64,${image.data}" />`;
-
-      res.write(img);
-    }
-   
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Server Error");
-  }
-}; */
-
-/* exports.getAllImages = async (req, res) => {
-  try {
-    const images = await imgModel.find();
-   
-      const imageList = images.map(image => ({
-      id: image._id,
-      name: image.name,
-      contentType: image.img.contentType,
-      data: image.img.data ,
-    }));
-    res.send(imageList);
-
-  
-  } catch (error) {
-    console.log(error);
-    res.status(500).send('Server Error');
-  }
-};
- */
-
-// *************************
-// ********* tags ***********
-// **************************
 
 exports.GetTag = async (req, res) => {
   Hashtag.find({}, (err, tags) => {
