@@ -2,13 +2,15 @@ const express = require("express");
 const router = express.Router();
 const cors = require("cors");
 const PostControllers = require("../controllers/Posts");
-
-//router.post("/UplodeFile", PostControllers.UplodeFile);
+ 
 
 const upload = require("../Midellware/multer");
-
-//router.get("/GetFile", PostControllers.GetFile);
+ 
 router.get("/getImages", PostControllers.getAllImages);
+router.get("/getOneImage", PostControllers.getImage);
+
+
+router.get("/getPublications", PostControllers.getPublication);
 
 router.post(
   "/PostPublication",

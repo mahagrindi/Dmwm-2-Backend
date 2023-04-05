@@ -8,6 +8,20 @@ var publicationModel = require("../models/publication");
 
 // Step 7 - the GET request handler that provides the HTML UI
 
+exports.getImage = async (req, res) => {
+  
+
+  try {
+    const images = await imgModel.findById(req.body.id);
+    res.send(images);
+    
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server Error");
+  }
+};
+
+
 exports.getPublication = async (req, res) => {
   try {
     const items = await publicationModel.find({});
@@ -17,6 +31,7 @@ exports.getPublication = async (req, res) => {
     res.status(500).send("An error occurred", err);
   }
 };
+
 
 exports.PostPublication = async (req, res) => {
   const options = { month: "2-digit", day: "2-digit", year: "numeric" };
@@ -48,9 +63,7 @@ exports.PostPublication = async (req, res) => {
     hashtagList.push(tagId);
   }
 }
-  
-  console.log(hashtagList);
-  console.log("1");
+   
 
   var ImgList = [];
  if( req.files.images){
@@ -68,16 +81,12 @@ exports.PostPublication = async (req, res) => {
         contentType: "image/png",
       },
     });
-    console.log("2");
-
     await img.save().then((res) => {
       console.log(res._id);
       ImgList.push(res._id);
       console.log(ImgList);
     });
   }}
-  console.log("3");
-  console.log(ImgList);
   var post = new publicationModel({
     Id_user: req.body.Id_user,
     text: req.body.text,
@@ -93,6 +102,8 @@ exports.PostPublication = async (req, res) => {
 });
 
 };
+
+
 exports.getAllImages = async (req, res) => {
   const page = req.query.page || 1;
 
@@ -118,43 +129,7 @@ exports.getAllImages_v2 = async (req, res) => {
   }
 };
 
-/* exports.getAllImages = async (req, res) => {
-  
-  try {
-    const images = await imgModel.find();
-    res.setHeader("Content-Type", "image/jpeg");
-    for (const image of images) {
-      const img = `<img src="data:${image.contentType};base64,${image.data}" />`;
-
-      res.write(img);
-    }
-   
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Server Error");
-  }
-}; */
-
-/* exports.getAllImages = async (req, res) => {
-  try {
-    const images = await imgModel.find();
-   
-      const imageList = images.map(image => ({
-      id: image._id,
-      name: image.name,
-      contentType: image.img.contentType,
-      data: image.img.data ,
-    }));
-    res.send(imageList);
-
-  
-  } catch (error) {
-    console.log(error);
-    res.status(500).send('Server Error');
-  }
-};
- */
-
+ 
 // *************************
 // ********* tags ***********
 // **************************
