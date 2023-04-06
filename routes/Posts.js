@@ -3,13 +3,16 @@ const router = express.Router();
 const cors = require("cors");
 const PostControllers = require("../controllers/Posts");
 
-//router.post("/UplodeFile", PostControllers.UplodeFile);
-
 const upload = require("../Midellware/multer");
 
-//router.get("/GetFile", PostControllers.GetFile);
 router.get("/getImages", PostControllers.getAllImages);
 
+//router.get("/getImage", PostControllers.getImage);
+router.get("/getPublications", PostControllers.getPublication);
+router.put("/reaction", PostControllers.addreaction);
+router.put("/addcomment", PostControllers.addcomment);
+router.put("/commreaction", PostControllers.commreaction);
+router.put("/addcommentReply", PostControllers.addcommentReply);
 router.post(
   "/PostPublication",
   upload.fields([{name: "images"}]),

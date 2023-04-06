@@ -14,7 +14,7 @@ const PublicationSchema = new mongoose.Schema({
   },
 
   img: {
-    type: [String],
+    type: [Object],
     required: false,
   },
   reaction: {
