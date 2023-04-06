@@ -37,7 +37,7 @@ exports.addreaction = async (req, res) => {
     if (reactionIndex > -1) {
       publication.reaction.splice(reactionIndex, 1);
     } else {
-      publication.reaction.push({idUser});
+      publication.reaction.push({ idUser });
     }
 
     await publication.save();
@@ -68,12 +68,15 @@ exports.addcomment = async (req, res) => {
   }
 };
 
-
 exports.commreaction = async (req, res) => {
   try {
     const publication = await publicationModel.findByIdAndUpdate(
       req.body.idPub,
-      { $inc: { [`commentaires.${req.body.commindex}.reaction`]: 1 } } 
+      {
+        $inc: {
+          [`commentaires.${req.body.commindex}.reaction`]: 1,
+        },
+      }
     );
 
     if (!publication) {
@@ -101,7 +104,6 @@ exports.addcommentReply = async (req, res) => {
         },
       }
     );
-    
 
     if (!publication) {
       return res.status(404).send("Publication not found");
@@ -114,7 +116,6 @@ exports.addcommentReply = async (req, res) => {
   }
 };
 
-
 exports.getPublication = async (req, res) => {
   try {
     const items = await publicationModel.find({});
@@ -126,7 +127,7 @@ exports.getPublication = async (req, res) => {
 };
 
 exports.PostPublication = async (req, res) => {
-  const options = {month: "2-digit", day: "2-digit", year: "numeric"};
+  const options = { month: "2-digit", day: "2-digit", year: "numeric" };
   //  const currentDate = new Date().toLocaleString(options);
   let currentDate = Date.now();
 
@@ -138,7 +139,7 @@ exports.PostPublication = async (req, res) => {
       : [req.body.hashtags];
 
     for (const tag of hashtags) {
-      const existingTag = await Hashtag.findOne({tag_name: tag});
+      const existingTag = await Hashtag.findOne({ tag_name: tag });
       let tagId;
 
       if (!existingTag) {
@@ -167,7 +168,7 @@ exports.PostPublication = async (req, res) => {
           data: fs.readFileSync(
             path.join(
               path.dirname(require.main.filename),
-              "uploads",
+              "../front/src/assets/img",
               element.filename
             )
           ),
@@ -177,7 +178,7 @@ exports.PostPublication = async (req, res) => {
 
       await img.save().then((res) => {
         console.log(res._id);
-        ImgList.push({idimg: res._id, imgName: element.filename});
+        ImgList.push({ idimg: res._id, imgName: element.filename });
         console.log(ImgList);
       });
     }
@@ -192,7 +193,7 @@ exports.PostPublication = async (req, res) => {
   });
 
   post.save().then((result) => {
-    res.status(200).json({message: "post added"});
+    res.status(200).json({ message: "post added" });
   });
 };
 
@@ -221,9 +222,9 @@ exports.GetTag = async (req, res) => {
 };
 exports.AddTags = async (req, res) => {
   // Extract the tag name from the request b
-  const {tagname} = req.body;
+  const { tagname } = req.body;
   console.log(req.body);
-  const {tagn} = req.params;
+  const { tagn } = req.params;
   // Add this line to log the request body
   try {
     if (!tagn) {
@@ -233,7 +234,7 @@ exports.AddTags = async (req, res) => {
     }
 
     // Check if tag already exists
-    const existingTag = await Hashtag.findOne({tag_name: tagn});
+    const existingTag = await Hashtag.findOne({ tag_name: tagn });
     if (existingTag) {
       // If tag already exists, return a success response
       return res.status(200).json({
