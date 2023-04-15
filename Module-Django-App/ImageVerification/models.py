@@ -2,12 +2,12 @@ from django.db import models
 import cv2
 
 
-def compareImage(img1, img2):
-    img1 = cv2.imread(img1)
-    img2 = cv2.imread(img2)
-    sift = cv2.xfeatures2d.SIFT_create()
-    kp1, des1 = sift.detectAndCompute(img1, None)
-    kp2, des2 = sift.detectAndCompute(img2, None)
+def compareImage(img11, img22):
+    img1 = cv2.imread(img11)
+    img2 = cv2.imread(img22)
+    sift = cv2.SIFT_create()
+    des1 = sift.detectAndCompute(img1, None)
+    des2 = sift.detectAndCompute(img2, None)
 
     bf = cv2.BFMatcher()
     matches = bf.knnMatch(des1, des2, k=2)
