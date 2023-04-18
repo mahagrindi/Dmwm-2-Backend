@@ -52,7 +52,6 @@ def home(request):
             return HttpResponse('Error')
 
         return HttpResponse(exist)
-
     if request.method == 'GET':
         response = requests.get('http://localhost:5000/Posts/getImages')
         images = response.json()

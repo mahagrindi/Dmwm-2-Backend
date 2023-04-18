@@ -10,21 +10,19 @@ const csrftoken = Cookies.get("csrftoken");
 axios.defaults.headers.common["X-CSRFToken"] = csrftoken;
 // Step 7 - the GET request handler that provides the HTML UI
 
-/* exports.getImage = async (req, res) => {
+exports.getImage = async (req, res) => {
   try {
     console.log(req.query.id);
     const image = await imgModel.findById(req.query.id);
     if (!image) {
-      return res.status(404).json({error: "Image not found"});
+      return res.status(404).json({ error: "Image not found" });
     }
-    res.send(image.name);
+    res.status(200).send(image);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server error");
+    res.status(404).send("Server error");
   }
 };
- */
-
 exports.addreaction = async (req, res) => {
   try {
     const publication = await publicationModel.findById(req.body.publicationId);

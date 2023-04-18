@@ -7,7 +7,7 @@ const upload = require("../Midellware/multer");
 
 router.get("/getImages", PostControllers.getAllImages);
 
-//router.get("/getImage", PostControllers.getImage);
+router.get("/getImage", PostControllers.getImage);
 router.get("/getPublications", PostControllers.getPublication);
 router.put("/reaction", PostControllers.addreaction);
 router.put("/addcomment", PostControllers.addcomment);
