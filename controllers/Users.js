@@ -8,7 +8,7 @@ const { token } = require("morgan");
 exports.UserList = async (req, res) => {
   try {
     const users = await User.find({}).populate();
-    res.json({ users });
+    res.send(users);
   } catch (err) {
     res.status(500).json({
       errorMessage: "Please try again later",
