@@ -62,7 +62,7 @@ exports.addcomment = async (req, res) => {
     });
 
     await publication.save();
-    res.send("ok");
+    res.json({ message: "ok" }); // send JSON response
   } catch (error) {
     throw new Error(error.message);
   }
