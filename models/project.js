@@ -14,7 +14,7 @@ const ProjectSchema = new mongoose.Schema({
   },
 
   img: {
-    type: [String],
+    type: [Object],
     required: false,
   },
   reaction: {
@@ -25,14 +25,19 @@ const ProjectSchema = new mongoose.Schema({
     type: [Object],
     required: false,
   },
-  republier: {
+   hashtag: {
     type: [Object],
     required: false,
   },
-  hashtag: {
-    type: [Object],
-    required: false,
+  tools : {
+    type : [ Object],
+    required : false,
   },
+  catg :{ 
+    type : [Object],
+  reaquired : false,
+},
+
 });
 ProjectSchema.pre("save", function (next) {
   next();

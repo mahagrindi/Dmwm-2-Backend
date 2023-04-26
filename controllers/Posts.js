@@ -62,7 +62,7 @@ exports.addcomment = async (req, res) => {
     });
 
     await publication.save();
-    res.send("ok");
+    res.json({ message: "ok" }); // send JSON response
   } catch (error) {
     throw new Error(error.message);
   }
@@ -165,7 +165,7 @@ exports.PostPublication = async (req, res) => {
           data: fs.readFileSync(
             path.join(
               path.dirname(require.main.filename),
-              "../front/src/assets/img",
+              "uploads",
               element.filename
             )
           ),

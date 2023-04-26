@@ -13,6 +13,7 @@ var app = express();
 const UserRoutes = require("./routes/users");
 
 const PostRoutes = require("./routes/Posts");
+const ProjectRouts = require("./routes/projects");
 
 const cors = require("cors");
 
@@ -39,6 +40,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/User", cors(), UserRoutes);
 
 app.use("/Posts", cors(), PostRoutes);
+app.use("/Project", cors(), ProjectRouts);
 
 mongoose.set("strictQuery", false);
 connectDB();
