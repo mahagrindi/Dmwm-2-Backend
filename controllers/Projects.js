@@ -21,7 +21,7 @@ exports.PostProject = async (req, res) => {
       ? req.body.hashtags
       : [req.body.hashtags];
     for (const tag of hashtags) {
-      const existingTag = await Hashtag.findOne({tag_name: tag});
+      const existingTag = await Hashtag.findOne({ tag_name: tag });
       let tagId;
       if (!existingTag) {
         // If tag doesn't exist, create a new tag and save it to the database
@@ -55,30 +55,30 @@ exports.PostProject = async (req, res) => {
           contentType: "image/png",
         },
       });
-      await axios
-        .post("http://localhost:8000/", {
-          image: img,
-        })
-        .then((response) => {
-          console.log(response.data);
-          if (response.data === 0) {
-            console.log("image mich m3awda", img.name);
-            ImgList.push(img);
-          } else {
-            console.log("image m3awda", img.name);
-            verification = false;
-          }
-        })
-        .catch(() => {
-          res.status(401).json({message: "error"});
-        });
+      // await axios
+      //   .post("http://localhost:8000/", {
+      //     image: img,
+      //   })
+      //   .then((response) => {
+      //     console.log(response.data);
+      //     if (response.data === 0) {
+      //       console.log("image mich m3awda", img.name);
+      //       ImgList.push(img);
+      //     } else {
+      //       console.log("image m3awda", img.name);
+      //       verification = false;
+      //     }
+      //   })
+      //   .catch(() => {
+      //     res.status(401).json({message: "error"});
+      //   });
     }
   }
   var ImgList1 = [];
   if (verification) {
     for (item of ImgList) {
       await item.save().then((res) => {
-        ImgList1.push({idimg: res._id, imgName: element.filename});
+        ImgList1.push({ idimg: res._id, imgName: element.filename });
       });
     }
     var project = new projectModels({
@@ -87,13 +87,13 @@ exports.PostProject = async (req, res) => {
       date: currentDate,
       img: ImgList1,
       hashtag: hashtagList,
-      catg :  req.body.catg,
-      tools : req.body.tools ,
+      catg: req.body.catg,
+      tools: req.body.tools,
     });
     await project.save().then(() => {
-      res.status(200).json({message: "post added"});
+      res.status(200).json({ message: "post added" });
     });
   } else {
-    res.status(200).json({message: "problem copyrigth"});
+    res.status(200).json({ message: "problem copyrigth" });
   }
 };
