@@ -72,7 +72,11 @@ exports.commreaction = async (req, res) => {
   try {
     const publication = await publicationModel.findByIdAndUpdate(
       req.body.idPub,
-      { $inc: { [`commentaires.${req.body.commindex}.reaction`]: 1 } }
+      {
+        $inc: {
+          [`commentaires.${req.body.commindex}.reaction`]: 1,
+        },
+      }
     );
 
     if (!publication) {
