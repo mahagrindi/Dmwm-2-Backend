@@ -1,6 +1,7 @@
 const Cookies = require("js-cookie");
 const express = require("express");
 const Hashtag = require("../models/hashtag");
+const Post = require("../models/publication");
 const path = require("path");
 const fs = require("fs");
 var imgModel = require("../models/Image");
@@ -126,6 +127,20 @@ exports.getPublication = async (req, res) => {
   }
 };
 
+exports.getPublicationByUserId = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const posts = await Post.find({ Id_user: id }).exec();
+    if (posts.length > 0) {
+      return res.status(200).send(posts);
+    } else {
+      return res.status(404).send("No posts found for the given ID.");
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send("An error occurred while fetching the posts.");
+  }
+};
 exports.PostPublication = async (req, res) => {
   verification = true;
   const options = { month: "2-digit", day: "2-digit", year: "numeric" };
