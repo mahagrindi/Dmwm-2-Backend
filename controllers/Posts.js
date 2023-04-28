@@ -209,7 +209,7 @@ exports.PostPublication = async (req, res) => {
       res.status(200).json({ message: "post added" });
     });
   } else {
-    res.status(200).json({ message: "problem copyrigth" });
+    res.status(500).json({ message: "problem copyrigth" });
   }
 };
 
