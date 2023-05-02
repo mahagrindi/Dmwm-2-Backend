@@ -7,6 +7,7 @@ var morgan = require("morgan"); //morgan--dev return in cmd api source
 var helmet = require("helmet"); //cashe source request
 const { default: mongoose } = require("mongoose");
 const connectDB = require("./DataBase/BD");
+const bodyParser = require("body-parser");
 
 var app = express();
 
@@ -17,13 +18,8 @@ const ProjectRouts = require("./routes/projects");
 
 const cors = require("cors");
 
-require("dotenv").config();
-
-var bodyParser = require("body-parser");
-
 var fs = require("fs");
 var path = require("path");
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 

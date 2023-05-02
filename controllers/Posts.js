@@ -143,8 +143,6 @@ exports.getPublicationByUserId = async (req, res) => {
 };
 exports.PostPublication = async (req, res) => {
   verification = true;
-  const options = { month: "2-digit", day: "2-digit", year: "numeric" };
-  //  const currentDate = new Date().toLocaleString(options);
   let currentDate = Date.now();
   var hashtagList = [];
   if (req.body.hashtags) {
@@ -367,4 +365,15 @@ exports.AddTags = async (req, res) => {
   }
 };
 
-
+exports.deletPost = async (req, res) => {
+  console.log("id", req.body.id);
+  const Post = await publicationModel
+    .findByIdAndRemove({ _id: req.body.id })
+    .then((Post) => {
+      console.log(Post);
+      res.status(200).json({ message: "you deleted Post" });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
