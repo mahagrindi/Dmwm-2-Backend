@@ -32,15 +32,12 @@ const UserSchema = new mongoose.Schema({
 
   watermark: {
     type: String,
-    // required: true,
   },
   followers: {
     type: [String],
-    // required: true,
   },
   galerie: {
     type: [String],
-    // required: true,
   },
   liens: {
     type: [String],

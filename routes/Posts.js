@@ -6,7 +6,7 @@ const PostControllers = require("../controllers/Posts");
 const upload = require("../Midellware/multer");
 
 router.get("/getImages", PostControllers.getAllImages);
-
+router.delete("/deletePost" , PostControllers.deletPost);
 router.get("/getImage", PostControllers.getImage);
 router.get("/getPublications", PostControllers.getPublication);
 router.put("/reaction", PostControllers.addreaction);
