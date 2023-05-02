@@ -15,7 +15,7 @@ exports.getImage = async (req, res) => {
     console.log(req.query.id);
     const image = await imgModel.findById(req.query.id);
     if (!image) {
-      return res.status(404).json({ error: "Image not found" });
+      return res.status(404).json({error: "Image not found"});
     }
     res.status(200).send(image);
   } catch (err) {
@@ -37,7 +37,7 @@ exports.addreaction = async (req, res) => {
     if (reactionIndex > -1) {
       publication.reaction.splice(reactionIndex, 1);
     } else {
-      publication.reaction.push({ idUser });
+      publication.reaction.push({idUser});
     }
 
     await publication.save();
@@ -62,7 +62,7 @@ exports.addcomment = async (req, res) => {
     });
 
     await publication.save();
-    res.json({ message: "ok" }); // send JSON response
+    res.json({message: "ok"}); // send JSON response
   } catch (error) {
     throw new Error(error.message);
   }
@@ -127,7 +127,7 @@ exports.getPublication = async (req, res) => {
 };
 
 exports.PostPublication = async (req, res) => {
-  verification = true; 
+  verification = true;
   let currentDate = Date.now();
   var hashtagList = [];
   if (req.body.hashtags) {
@@ -136,7 +136,7 @@ exports.PostPublication = async (req, res) => {
       ? req.body.hashtags
       : [req.body.hashtags];
     for (const tag of hashtags) {
-      const existingTag = await Hashtag.findOne({ tag_name: tag });
+      const existingTag = await Hashtag.findOne({tag_name: tag});
       let tagId;
       if (!existingTag) {
         // If tag doesn't exist, create a new tag and save it to the database
@@ -185,7 +185,7 @@ exports.PostPublication = async (req, res) => {
           }
         })
         .catch(() => {
-          res.status(401).json({ message: "error" });
+          res.status(401).json({message: "error"});
         });
     }
   }
@@ -193,7 +193,7 @@ exports.PostPublication = async (req, res) => {
   if (verification) {
     for (item of ImgList) {
       await item.save().then((res) => {
-        ImgList1.push({ idimg: res._id, imgName: element.filename });
+        ImgList1.push({idimg: res._id, imgName: element.filename});
       });
     }
     var post = new publicationModel({
@@ -204,10 +204,10 @@ exports.PostPublication = async (req, res) => {
       hashtag: hashtagList,
     });
     await post.save().then(() => {
-      res.status(200).json({ message: "post added" });
+      res.status(200).json({message: "post added"});
     });
   } else {
-    res.status(401).json({ message: "problem copyrigth" });
+    res.status(401).json({message: "problem copyrigth"});
   }
 };
 
@@ -314,9 +314,9 @@ exports.GetTag = async (req, res) => {
 };
 exports.AddTags = async (req, res) => {
   // Extract the tag name from the request b
-  const { tagname } = req.body;
+  const {tagname} = req.body;
   console.log(req.body);
-  const { tagn } = req.params;
+  const {tagn} = req.params;
   // Add this line to log the request body
   try {
     if (!tagn) {
@@ -326,7 +326,7 @@ exports.AddTags = async (req, res) => {
     }
 
     // Check if tag already exists
-    const existingTag = await Hashtag.findOne({ tag_name: tagn });
+    const existingTag = await Hashtag.findOne({tag_name: tagn});
     if (existingTag) {
       // If tag already exists, return a success response
       return res.status(200).json({
@@ -350,15 +350,32 @@ exports.AddTags = async (req, res) => {
   }
 };
 
+exports.deletPost = async (req, res) => {
+  const Post = await publicationModel
+    .findByIdAndRemove({_id: req.body.id})
+    .then((Post) => {
+      console.log(Post);
+      res.status(200).json({message: "you deleted Post"});
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
-exports.deletPost = async (req , res ) =>{
+exports.upateDatePost = async (req, res) => {
+  try {
+    const post = await publicationModel.findById(req.body.id);
 
-  const Post = await publicationModel.findByIdAndRemove({_id: req.body.id})
-  .then((Post) => {
-    console.log(Post);
-    res.status(200).json({message: "you deleted Post"});
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-}
+    if (!post) {
+      return res.status(404).json({message: "Post not found"});
+    }
+
+    post.text = req.body.text;
+    await post.save();
+
+    return res.status(200).json({message: "Post updated successfully"});
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({message: "Internal server error"});
+  }
+};

@@ -21,5 +21,6 @@ router.post(
 
 router.get("/GetTag", PostControllers.GetTag);
 router.post("/AddTag/:tagn", PostControllers.AddTags);
+router.put("updatePost" , PostControllers.upateDatePost);
 
 module.exports = router;
