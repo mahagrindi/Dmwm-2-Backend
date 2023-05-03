@@ -253,21 +253,15 @@ exports.userDelete = async (req, res) => {
     });
 };
 exports.ajouterAbonnes = async (req, res) => {
-  const user = await User.findByIdAndRemove({ _id: req.body.id })
-    .then((user) => {
-      console.log(user);
-      res.status(200).json({ message: "you deleted user" });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};exports.ajouterAbonnements = async (req, res) => {
-  const user = await User.findByIdAndRemove({ _id: req.body.id })
-    .then((user) => {
-      console.log(user);
-      res.status(200).json({ message: "you deleted user" });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  try {
+    const filter = { _id: req.body.id };
+    const update = { $push: { following: { id: req.body.idprofile } } };
+    await User.findOneAndUpdate(filter, update);
+    const filter2 = { _id: req.body.idprofile };
+    const update2 = { $push: { followers: { id: req.body.id } } };
+    await User.findOneAndUpdate(filter2, update2);
+    res.status(200).send("ok ! ");
+  } catch (error) {
+    res.status(401).send(error);
+  }
 };

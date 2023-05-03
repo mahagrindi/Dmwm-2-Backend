@@ -13,8 +13,7 @@ router.post("/inscription", UserControllers.userInscription);
 router.post("/login", UserControllers.userLogin);
 router.post("/forgotPassword", UserControllers.forgotPassword);
 router.patch("/resetPassword/:token", UserControllers.resetPassword);
-router.patch("/ajouterAbonnements", UserControllers.ajouterAbonnements);
-router.patch("/ajouterAbonnes", UserControllers.ajouterAbonnes);
+router.post("/ajouterAbonnes", UserControllers.ajouterAbonnes);
 
 // router.param("token", async (req, res, next, token) => {
 //   console.log(token);
