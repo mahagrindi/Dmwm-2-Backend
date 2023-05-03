@@ -252,3 +252,22 @@ exports.userDelete = async (req, res) => {
       console.log(error);
     });
 };
+exports.ajouterAbonnes = async (req, res) => {
+  const user = await User.findByIdAndRemove({ _id: req.body.id })
+    .then((user) => {
+      console.log(user);
+      res.status(200).json({ message: "you deleted user" });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};exports.ajouterAbonnements = async (req, res) => {
+  const user = await User.findByIdAndRemove({ _id: req.body.id })
+    .then((user) => {
+      console.log(user);
+      res.status(200).json({ message: "you deleted user" });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
