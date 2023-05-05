@@ -4,6 +4,7 @@ let jwt = require("jsonwebtoken");
 let bcrypt = require("bcrypt");
 const emailjs = require("@emailjs/nodejs");
 const { token } = require("morgan");
+const ObjectId = require("mongodb").ObjectId;
 
 exports.UserList = async (req, res) => {
   try {
@@ -237,13 +238,12 @@ exports.resetPassword = async (req, res, next) => {
   } catch (error) {
     console.error(error);
 
-    // Return an error message
     return res.status(500).json({ message: "Password reset failed" });
   }
 };
 
 exports.userDelete = async (req, res) => {
-  const user = await User.findByIdAndRemove({ _id: req.body.id })
+  await User.findByIdAndRemove({ _id: req.body.id })
     .then((user) => {
       console.log(user);
       res.status(200).json({ message: "you deleted user" });
@@ -260,8 +260,52 @@ exports.ajouterAbonnes = async (req, res) => {
     const filter2 = { _id: req.body.idprofile };
     const update2 = { $push: { followers: { id: req.body.id } } };
     await User.findOneAndUpdate(filter2, update2);
-    res.status(200).send("ok ! ");
+    res.status(200).send({ message: "ok ! " });
   } catch (error) {
-    res.status(401).send(error);
+    res.status(401).send({ error: error });
+  }
+};
+
+exports.supprimerAbonnes = async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.body.id });
+    const userprofile = await User.findOne({ _id: req.body.idprofile });
+
+    let followingIndex = -1;
+    for (let i = 0; i < user.following.length; i++) {
+      const objectId = new ObjectId(user.following[i].id);
+      if (objectId.equals(userprofile._id)) {
+        followingIndex = i;
+        break;
+      }
+    }
+    if (followingIndex !== -1) {
+      user.following.splice(followingIndex, 1);
+    }
+
+    let followersIndex = -1;
+    for (let i = 0; i < userprofile.followers.length; i++) {
+      const objectId = new ObjectId(userprofile.followers[i].id);
+      if (objectId.equals(user._id)) {
+        followersIndex = i;
+        break;
+      }
+    }
+    if (followersIndex !== -1) {
+      userprofile.followers.splice(followersIndex, 1);
+    }
+
+    const filter = { _id: req.body.id };
+    const update = { following: user.following };
+    await User.findOneAndUpdate(filter, update);
+
+    const filter2 = { _id: req.body.idprofile };
+    const update2 = { followers: userprofile.followers };
+    await User.findOneAndUpdate(filter2, update2);
+
+    res.status(200).send({ message: "ok!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error });
   }
 };
