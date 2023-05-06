@@ -10,6 +10,8 @@ const axios = require("axios");
 const csrftoken = Cookies.get("csrftoken");
 axios.defaults.headers.common["X-CSRFToken"] = csrftoken;
 const { ObjectId } = require("mongodb");
+
+
 exports.PostProject = async (req, res) => {
   verification = true;
 
@@ -40,6 +42,7 @@ exports.PostProject = async (req, res) => {
   }
   var ImgList = [];
   console.log(req.files.images);
+
   if (req.files.images) {
     for (var element of req.files.images) {
       var img = new imgModel({
@@ -55,27 +58,14 @@ exports.PostProject = async (req, res) => {
           contentType: "image/png",
         },
       });
-      // await axios
-      //   .post("http://localhost:8000/", {
-      //     image: img,
-      //   })
-      //   .then((response) => {
-      //     console.log(response.data);
-      //     if (response.data === 0) {
-      //       console.log("image mich m3awda", img.name);
-      //       ImgList.push(img);
-      //     } else {
-      //       console.log("image m3awda", img.name);
-      //       verification = false;
-      //     }
-      //   })
-      //   .catch(() => {
-      //     res.status(401).json({message: "error"});
-      //   });
+       
+           
+              ImgList.push(img);
+           
     }
   }
   var ImgList1 = [];
-  if (verification) {
+   
     for (item of ImgList) {
       await item.save().then((res) => {
         ImgList1.push({ idimg: res._id, imgName: element.filename });
@@ -93,10 +83,11 @@ exports.PostProject = async (req, res) => {
     await project.save().then(() => {
       res.status(200).json({ message: "post added" });
     });
-  } else {
-    res.status(200).json({ message: "problem copyrigth" });
-  }
+ 
 };
+
+
+
 exports.deletProject = async (req, res) => {
   try {
     console.log("====================================");
@@ -120,3 +111,15 @@ exports.deletProject = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+exports.GetProject = async (req , res ) => {
+  try {
+    const ProjectList = await projectModels.find({}).populate();
+    res.send(ProjectList);
+  } catch (err) {
+    res.status(500).json({
+      errorMessage: "Please try again later",
+    });
+  }
+}
