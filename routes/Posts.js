@@ -1,12 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const cors = require("cors");
 const PostControllers = require("../controllers/Posts");
 
 const upload = require("../Midellware/multer");
 
 router.get("/getImages", PostControllers.getAllImages);
-router.delete("/deletePost" , PostControllers.deletPost);
+router.delete("/deletePost", PostControllers.deletPost);
 router.get("/getImage", PostControllers.getImage);
 router.get("/getPublications", PostControllers.getPublication);
 router.get("/getPublications/:id", PostControllers.getPublicationByUserId);
