@@ -37,7 +37,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/User", cors(), UserRoutes);
 
 app.use("/Posts", cors(), PostRoutes);
-app.use("/Single", cors(), SingleRoutes );
+app.use("/Single", cors(), SingleRoutes);
 app.use("/Project", cors(), ProjectRouts);
 
 mongoose.set("strictQuery", false);
@@ -48,4 +48,4 @@ app.get("/", (rep, res) => {
 });
 const port = process.env.PORT || 5000;
 
-app.listen(port, () => console.log("server is up and running  "));
+app.listen(port, () => console.log("server is up and running", port));
