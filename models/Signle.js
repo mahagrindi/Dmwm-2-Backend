@@ -8,9 +8,13 @@ const SingleSchema = new mongoose.Schema({
     type: String ,
     required: false,
   },
+  publiction_id : {
+    type :String ,
+    required : false ,
+  },
   state : {
-     type: String ,
-     default : "waiting",
+     type: Boolean ,
+     default : true ,
   }
 
 
