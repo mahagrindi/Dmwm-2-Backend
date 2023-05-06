@@ -19,14 +19,10 @@ const ProjectRouts = require("./routes/projects");
 
 const cors = require("cors");
 
-require("dotenv").config();
- 
-
 var fs = require("fs");
 var path = require("path");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
 
 // Set EJS as templating engine
 app.set("view engine", "ejs");

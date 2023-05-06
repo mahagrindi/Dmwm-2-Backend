@@ -9,6 +9,7 @@ router.get("/getImages", PostControllers.getAllImages);
 router.delete("/deletePost", PostControllers.deletPost);
 router.get("/getImage", PostControllers.getImage);
 router.get("/getPublications", PostControllers.getPublication);
+router.get("/getPublications/:id", PostControllers.getPublicationByUserId);
 router.put("/reaction", PostControllers.addreaction);
 router.put("/addcomment", PostControllers.addcomment);
 router.put("/commreaction", PostControllers.commreaction);

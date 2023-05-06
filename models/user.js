@@ -34,7 +34,12 @@ const UserSchema = new mongoose.Schema({
     type: String,
   },
   followers: {
-    type: [String],
+    type: [],
+    required: false,
+  },
+  following: {
+    type: [],
+    required: false,
   },
   galerie: {
     type: [String],

@@ -9,7 +9,7 @@ var publicationModel = require("../models/publication");
 const axios = require("axios");
 const csrftoken = Cookies.get("csrftoken");
 axios.defaults.headers.common["X-CSRFToken"] = csrftoken;
-const {ObjectId} = require("mongodb");
+const { ObjectId } = require("mongodb");
 exports.PostProject = async (req, res) => {
   verification = true;
 
@@ -21,7 +21,7 @@ exports.PostProject = async (req, res) => {
       ? req.body.hashtags
       : [req.body.hashtags];
     for (const tag of hashtags) {
-      const existingTag = await Hashtag.findOne({tag_name: tag});
+      const existingTag = await Hashtag.findOne({ tag_name: tag });
       let tagId;
       if (!existingTag) {
         // If tag doesn't exist, create a new tag and save it to the database
@@ -55,13 +55,30 @@ exports.PostProject = async (req, res) => {
           contentType: "image/png",
         },
       });
+      // await axios
+      //   .post("http://localhost:8000/", {
+      //     image: img,
+      //   })
+      //   .then((response) => {
+      //     console.log(response.data);
+      //     if (response.data === 0) {
+      //       console.log("image mich m3awda", img.name);
+      //       ImgList.push(img);
+      //     } else {
+      //       console.log("image m3awda", img.name);
+      //       verification = false;
+      //     }
+      //   })
+      //   .catch(() => {
+      //     res.status(401).json({message: "error"});
+      //   });
     }
   }
   var ImgList1 = [];
   if (verification) {
     for (item of ImgList) {
       await item.save().then((res) => {
-        ImgList1.push({idimg: res._id, imgName: element.filename});
+        ImgList1.push({ idimg: res._id, imgName: element.filename });
       });
     }
     var project = new projectModels({
@@ -74,26 +91,32 @@ exports.PostProject = async (req, res) => {
       tools: req.body.tools,
     });
     await project.save().then(() => {
-      res.status(200).json({message: "post added"});
+      res.status(200).json({ message: "post added" });
     });
   } else {
-    res.status(200).json({message: "problem copyrigth"});
+    res.status(200).json({ message: "problem copyrigth" });
   }
 };
 exports.deletProject = async (req, res) => {
   try {
-    console.log('====================================');
+    console.log("====================================");
     console.log(req.body.id);
-    console.log('====================================');
-    const deletedProject = await projectModels.findByIdAndRemove(req.body.id).exec();
+    console.log("====================================");
+    const deletedProject = await projectModels
+      .findByIdAndRemove(req.body.id)
+      .exec();
     if (deletedProject) {
-      res.status(200).json({ message: 'Project deleted successfully', project: deletedProject });
+      res
+        .status(200)
+        .json({
+          message: "Project deleted successfully",
+          project: deletedProject,
+        });
     } else {
-      res.status(404).json({ message: 'Project not found' });
+      res.status(404).json({ message: "Project not found" });
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
-
