@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const cors = require("cors");
 const PostControllers = require("../controllers/Posts");
 
 const upload = require("../Midellware/multer");
