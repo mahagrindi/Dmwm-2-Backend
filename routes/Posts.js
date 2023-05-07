@@ -23,5 +23,6 @@ router.post(
 router.get("/GetTag", PostControllers.GetTag);
 router.post("/AddTag/:tagn", PostControllers.AddTags);
 router.put("updatePost", PostControllers.upateDatePost);
+router.get("/getPublicationsByID/:id" , PostControllers.getPublicationsByID);
 
 module.exports = router;

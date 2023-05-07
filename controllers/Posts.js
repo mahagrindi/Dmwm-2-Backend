@@ -130,7 +130,7 @@ exports.getPublication = async (req, res) => {
 exports.getPublicationByUserId = async (req, res) => {
   try {
     const id = req.params.id;
-    const posts = await Post.find({ Id_user: id }).exec();
+    const posts = await Post.find({Id_user: id}).exec();
     if (posts.length > 0) {
       return res.status(200).send(posts);
     } else {
@@ -286,10 +286,10 @@ exports.AddTags = async (req, res) => {
 exports.deletPost = async (req, res) => {
   console.log("id", req.body.id);
   const Post = await publicationModel
-    .findByIdAndRemove({ _id: req.body.id })
+    .findByIdAndRemove({_id: req.body.id})
     .then((Post) => {
       console.log(Post);
-      res.status(200).json({ message: "you deleted Post" });
+      res.status(200).json({message: "you deleted Post"});
     })
     .catch((error) => {
       console.log(error);
@@ -311,5 +311,18 @@ exports.upateDatePost = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({message: "Internal server error"});
+  }
+};
+
+exports.getPublicationsByID = async (req, res) => {
+  const id = req.params.id;
+  console.log(id);
+  let post = await publicationModel.findById({_id: id});
+  console.log(post);
+
+  if (post) {
+    res.json(post);
+  } else {
+    res.status(404).send("ID does not exist !!");
   }
 };
