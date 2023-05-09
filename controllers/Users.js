@@ -240,3 +240,18 @@ exports.resetPassword = async (req, res, next) => {
     return res.status(500).json({ message: "Password reset failed" });
   }
 };
+
+
+exports.userDelete= async (req, res) => {
+ 
+
+    const user = await User.findByIdAndRemove({_id: req.body.id})
+    .then((user) => {
+      console.log(user);
+      res.status(200).json({message: "you deleted user"});
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  
+}

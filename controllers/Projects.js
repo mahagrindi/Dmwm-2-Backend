@@ -9,7 +9,7 @@ var publicationModel = require("../models/publication");
 const axios = require("axios");
 const csrftoken = Cookies.get("csrftoken");
 axios.defaults.headers.common["X-CSRFToken"] = csrftoken;
-
+const { ObjectId } = require("mongodb");
 exports.PostProject = async (req, res) => {
   verification = true;
 
@@ -55,23 +55,6 @@ exports.PostProject = async (req, res) => {
           contentType: "image/png",
         },
       });
-      // await axios
-      //   .post("http://localhost:8000/", {
-      //     image: img,
-      //   })
-      //   .then((response) => {
-      //     console.log(response.data);
-      //     if (response.data === 0) {
-      //       console.log("image mich m3awda", img.name);
-      //       ImgList.push(img);
-      //     } else {
-      //       console.log("image m3awda", img.name);
-      //       verification = false;
-      //     }
-      //   })
-      //   .catch(() => {
-      //     res.status(401).json({message: "error"});
-      //   });
     }
   }
   var ImgList1 = [];
@@ -83,7 +66,7 @@ exports.PostProject = async (req, res) => {
     }
     var project = new projectModels({
       Id_user: req.body.Id_user,
-      title: req.body.text,
+      title: req.body.titre,
       date: currentDate,
       img: ImgList1,
       hashtag: hashtagList,
@@ -95,5 +78,28 @@ exports.PostProject = async (req, res) => {
     });
   } else {
     res.status(200).json({ message: "problem copyrigth" });
+  }
+};
+exports.deletProject = async (req, res) => {
+  try {
+    console.log("====================================");
+    console.log(req.body.id);
+    console.log("====================================");
+    const deletedProject = await projectModels
+      .findByIdAndRemove(req.body.id)
+      .exec();
+    if (deletedProject) {
+      res
+        .status(200)
+        .json({
+          message: "Project deleted successfully",
+          project: deletedProject,
+        });
+    } else {
+      res.status(404).json({ message: "Project not found" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

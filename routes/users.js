@@ -5,7 +5,7 @@ const User = require("../models/user");
 const crypto = require("crypto");
 
 const UserControllers = require("../controllers/Users");
-
+router.delete("/deleteUser" , UserControllers.userDelete);
 router.get("/UserList", UserControllers.UserList);
 router.get("/getUserById/:id", UserControllers.findUserById);
 router.get("/getUserByUsername/:username", UserControllers.findUserByUsername);
