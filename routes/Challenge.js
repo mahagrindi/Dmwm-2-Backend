@@ -16,6 +16,7 @@ router.post(
   upload.fields([{name: "images"}]),
   ChallengeControllers.SendChallenge
 );
+router.post("/deleteChallenge", ChallengeControllers.deleteChallenge);
 
 router.post("/winner", ChallengeControllers.winner);
 

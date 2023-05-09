@@ -284,8 +284,8 @@ exports.AddTags = async (req, res) => {
   }
 };
 
-exports.deletPost = async (req, res) => {
-  console.log("id", req.body.id);
+exports.deletPostWihSngle = async (req, res) => {
+  
      const Post = await publicationModel
     .findByIdAndRemove({_id: req.body.id})
     .then(async (Post) => {
@@ -302,6 +302,20 @@ exports.deletPost = async (req, res) => {
   });
 };
 
+
+exports.deleteMyPost = async (req, res) => {
+  
+  const Post = await publicationModel
+ .findByIdAndRemove({_id: req.body.id})
+ .then(async (Post) => {
+   console.log(Post);
+ res.status(200).json({message: "single updated"});
+
+ })
+ .catch((error) => {
+   console.log(error);
+ });    
+};
 exports.upateDatePost = async (req, res) => {
   try {
     const post = await publicationModel.findById(req.body.id);
