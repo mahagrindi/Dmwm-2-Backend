@@ -16,6 +16,7 @@ const UserRoutes = require("./routes/users");
 const PostRoutes = require("./routes/Posts");
 const SingleRoutes = require("./routes/Single");
 const ProjectRouts = require("./routes/projects");
+const ChallengetRouts = require("./routes/Challenge");
 
 const cors = require("cors");
 
@@ -39,6 +40,7 @@ app.use("/User", cors(), UserRoutes);
 app.use("/Posts", cors(), PostRoutes);
 app.use("/Single", cors(), SingleRoutes);
 app.use("/Project", cors(), ProjectRouts);
+app.use("/Challenge", cors(), ChallengetRouts);
 
 mongoose.set("strictQuery", false);
 connectDB();

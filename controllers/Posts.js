@@ -132,13 +132,14 @@ exports.getPublicationByUserId = async (req, res) => {
     const id = req.params.id;
     const posts = await Post.find({Id_user: id}).exec();
     if (posts.length > 0) {
-      return res.status(200).send(posts);
+       res.json(posts);
+
     } else {
-      return res.status(404).send("No posts found for the given ID.");
+       res.status(404).send("No posts found for the given ID.");
     }
   } catch (err) {
     console.log(err);
-    return res.status(500).send("An error occurred while fetching the posts.");
+     res.status(500).send("An error occurred while fetching the posts.");
   }
 };
 exports.PostPublication = async (req, res) => {
