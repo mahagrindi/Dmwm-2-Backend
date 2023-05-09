@@ -25,19 +25,27 @@ const ProjectSchema = new mongoose.Schema({
     type: [Object],
     required: false,
   },
-   hashtag: {
+  hashtag: {
     type: [Object],
     required: false,
   },
-  tools : {
-    type : [ Object],
-    required : false,
+  tools: {
+    type: [Object],
+    required: false,
   },
-  catg :{ 
-    type : [Object],
-  reaquired : false,
-},
-
+  catg: {
+    type: [Object],
+    required: false,
+  },
+  vueNumber: {
+    type: Number,
+    default: 0,
+    required: false,
+  },
+  vueUsers: {
+    type: [Object],
+    required: false,
+  },
 });
 ProjectSchema.pre("save", function (next) {
   next();
