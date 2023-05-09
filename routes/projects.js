@@ -9,5 +9,8 @@ router.post(
   upload.fields([{name: "images"}]),
   ProjectControllers.PostProject
 );
+
+
+router.get("/GetProjects" , ProjectControllers.GetProject);
 router.delete("/deleteProject", ProjectControllers.deletProject);
 module.exports = router;

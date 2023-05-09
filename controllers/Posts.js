@@ -16,7 +16,7 @@ exports.getImage = async (req, res) => {
     console.log(req.query.id);
     const image = await imgModel.findById(req.query.id);
     if (!image) {
-      return res.status(404).json({ error: "Image not found" });
+      return res.status(404).json({error: "Image not found"});
     }
     res.status(200).send(image);
   } catch (err) {
@@ -38,7 +38,7 @@ exports.addreaction = async (req, res) => {
     if (reactionIndex > -1) {
       publication.reaction.splice(reactionIndex, 1);
     } else {
-      publication.reaction.push({ idUser });
+      publication.reaction.push({idUser});
     }
 
     await publication.save();
@@ -63,7 +63,7 @@ exports.addcomment = async (req, res) => {
     });
 
     await publication.save();
-    res.json({ message: "ok" }); // send JSON response
+    res.json({message: "ok"}); // send JSON response
   } catch (error) {
     throw new Error(error.message);
   }
@@ -142,7 +142,7 @@ exports.getPublicationByUserId = async (req, res) => {
   }
 };
 exports.PostPublication = async (req, res) => {
-  verification = true; 
+  verification = true;
   let currentDate = Date.now();
   var hashtagList = [];
   if (req.body.hashtags) {
@@ -151,7 +151,7 @@ exports.PostPublication = async (req, res) => {
       ? req.body.hashtags
       : [req.body.hashtags];
     for (const tag of hashtags) {
-      const existingTag = await Hashtag.findOne({ tag_name: tag });
+      const existingTag = await Hashtag.findOne({tag_name: tag});
       let tagId;
       if (!existingTag) {
         // If tag doesn't exist, create a new tag and save it to the database
@@ -169,7 +169,6 @@ exports.PostPublication = async (req, res) => {
     }
   }
   var ImgList = [];
-  console.log(req.files.images);
   if (req.files.images) {
     for (var element of req.files.images) {
       var img = new imgModel({
@@ -190,17 +189,14 @@ exports.PostPublication = async (req, res) => {
           image: img,
         })
         .then((response) => {
-          console.log(response.data);
           if (response.data === 0) {
-            console.log("image mich m3awda", img.name);
             ImgList.push(img);
           } else {
-            console.log("image m3awda", img.name);
             verification = false;
           }
         })
         .catch(() => {
-          res.status(401).json({ message: "error" });
+          res.status(401).json({message: "error"});
         });
     }
   }
@@ -208,7 +204,7 @@ exports.PostPublication = async (req, res) => {
   if (verification) {
     for (item of ImgList) {
       await item.save().then((res) => {
-        ImgList1.push({ idimg: res._id, imgName: element.filename });
+        ImgList1.push({idimg: res._id, imgName: element.filename});
       });
     }
     var post = new publicationModel({
@@ -219,90 +215,12 @@ exports.PostPublication = async (req, res) => {
       hashtag: hashtagList,
     });
     await post.save().then(() => {
-      res.status(200).json({ message: "post added" });
+      res.status(200).json({message: "post added"});
     });
   } else {
-    res.status(401).json({ message: "problem copyrigth" });
+    res.status(401).json({message: "problem copyrigth"});
   }
 };
-
-// exports.PostPublication = async (req, res) => {
-// const options = { month: "2-digit", day: "2-digit", year: "numeric" };
-// //  const currentDate = new Date().toLocaleString(options);
-// let currentDate = Date.now();
-
-// var hashtagList = [];
-// if (req.body.hashtags) {
-//   // Convert hashtags to an array if it's not already an array
-//   const hashtags = Array.isArray(req.body.hashtags)
-//     ? req.body.hashtags
-//     : [req.body.hashtags];
-
-//   for (const tag of hashtags) {
-//     const existingTag = await Hashtag.findOne({ tag_name: tag });
-//     let tagId;
-
-//     if (!existingTag) {
-//       // If tag doesn't exist, create a new tag and save it to the database
-//       const newTag = new Hashtag();
-//       newTag.tag_name = tag;
-//       newTag.copyrightChecked = req.body.copyrightChecked;
-//       await newTag.save();
-//       tagId = newTag._id;
-//     } else {
-//       // If tag exists, get its ID
-//       tagId = existingTag._id;
-//     }
-
-//     // Add the ID to the list of hashtags for the post
-//     hashtagList.push(tagId);
-//   }
-// }
-
-// var ImgList = [];
-//   if (req.files.images) {
-//     for (var element of req.files.images) {
-//       let img = new imgModel({
-//         name: element.filename,
-//         img: {
-//           data: fs.readFileSync(
-//             path.join(
-//               path.dirname(require.main.filename),
-//               "uploads",
-//               element.filename
-//             )
-//           ),
-//           contentType: "image/png",
-//         },
-//       });
-//       await axios
-//         .post("http://localhost:8000/", {
-//           image: img,
-//         })
-//         .then(async (response) => {
-//           await img.save().then(async (res) => {
-//             ImgList.push({ idimg: res._id, imgName: element.filename });
-//           });
-//           console.log(response.data);
-//         })
-//         .catch((error) => {
-//           console.error(error);
-//         });
-//     }
-// var post = new publicationModel({
-//   Id_user: req.body.Id_user,
-//   text: req.body.text,
-//   date: currentDate,
-//   img: ImgList,
-//   hashtag: hashtagList,
-// });
-
-// post.save().then(() => {
-//   res.status(200).json({ message: "post added" });
-// });
-//   }
-//   res.status(200).json({ message: "post added" });
-// };
 
 exports.getAllImages = async (req, res) => {
   try {
@@ -329,9 +247,9 @@ exports.GetTag = async (req, res) => {
 };
 exports.AddTags = async (req, res) => {
   // Extract the tag name from the request b
-  const { tagname } = req.body;
+  const {tagname} = req.body;
   console.log(req.body);
-  const { tagn } = req.params;
+  const {tagn} = req.params;
   // Add this line to log the request body
   try {
     if (!tagn) {
@@ -341,7 +259,7 @@ exports.AddTags = async (req, res) => {
     }
 
     // Check if tag already exists
-    const existingTag = await Hashtag.findOne({ tag_name: tagn });
+    const existingTag = await Hashtag.findOne({tag_name: tagn});
     if (existingTag) {
       // If tag already exists, return a success response
       return res.status(200).json({
@@ -365,15 +283,33 @@ exports.AddTags = async (req, res) => {
   }
 };
 
+exports.deletPost = async (req, res) => {
+  console.log("id", req.body.id);
+  const Post = await publicationModel
+    .findByIdAndRemove({ _id: req.body.id })
+    .then((Post) => {
+      console.log(Post);
+      res.status(200).json({ message: "you deleted Post" });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
-exports.deletPost = async (req , res ) =>{
+exports.upateDatePost = async (req, res) => {
+  try {
+    const post = await publicationModel.findById(req.body.id);
 
-  const Post = await publicationModel.findByIdAndRemove({_id: req.body.id})
-  .then((Post) => {
-    console.log(Post);
-    res.status(200).json({message: "you deleted Post"});
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-}
+    if (!post) {
+      return res.status(404).json({message: "Post not found"});
+    }
+
+    post.text = req.body.text;
+    await post.save();
+
+    return res.status(200).json({message: "Post updated successfully"});
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({message: "Internal server error"});
+  }
+};

@@ -10,6 +10,7 @@ const axios = require("axios");
 const csrftoken = Cookies.get("csrftoken");
 axios.defaults.headers.common["X-CSRFToken"] = csrftoken;
 const { ObjectId } = require("mongodb");
+
 exports.PostProject = async (req, res) => {
   verification = true;
 
@@ -40,6 +41,7 @@ exports.PostProject = async (req, res) => {
   }
   var ImgList = [];
   console.log(req.files.images);
+
   if (req.files.images) {
     for (var element of req.files.images) {
       var img = new imgModel({
@@ -55,31 +57,31 @@ exports.PostProject = async (req, res) => {
           contentType: "image/png",
         },
       });
+
+      ImgList.push(img);
     }
   }
   var ImgList1 = [];
-  if (verification) {
-    for (item of ImgList) {
-      await item.save().then((res) => {
-        ImgList1.push({ idimg: res._id, imgName: element.filename });
-      });
-    }
-    var project = new projectModels({
-      Id_user: req.body.Id_user,
-      title: req.body.titre,
-      date: currentDate,
-      img: ImgList1,
-      hashtag: hashtagList,
-      catg: req.body.catg,
-      tools: req.body.tools,
+
+  for (item of ImgList) {
+    await item.save().then((res) => {
+      ImgList1.push({ idimg: res._id, imgName: element.filename });
     });
-    await project.save().then(() => {
-      res.status(200).json({ message: "post added" });
-    });
-  } else {
-    res.status(200).json({ message: "problem copyrigth" });
   }
+  var project = new projectModels({
+    Id_user: req.body.Id_user,
+    title: req.body.titre,
+    date: currentDate,
+    img: ImgList1,
+    hashtag: hashtagList,
+    catg: req.body.catg,
+    tools: req.body.tools,
+  });
+  await project.save().then(() => {
+    res.status(200).json({ message: "post added" });
+  });
 };
+
 exports.deletProject = async (req, res) => {
   try {
     console.log("====================================");
@@ -89,17 +91,26 @@ exports.deletProject = async (req, res) => {
       .findByIdAndRemove(req.body.id)
       .exec();
     if (deletedProject) {
-      res
-        .status(200)
-        .json({
-          message: "Project deleted successfully",
-          project: deletedProject,
-        });
+      res.status(200).json({
+        message: "Project deleted successfully",
+        project: deletedProject,
+      });
     } else {
       res.status(404).json({ message: "Project not found" });
     }
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.GetProject = async (req, res) => {
+  try {
+    const ProjectList = await projectModels.find({}).populate();
+    res.send(ProjectList);
+  } catch (err) {
+    res.status(500).json({
+      errorMessage: "Please try again later",
+    });
   }
 };

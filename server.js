@@ -14,18 +14,15 @@ var app = express();
 const UserRoutes = require("./routes/users");
 
 const PostRoutes = require("./routes/Posts");
+const SingleRoutes = require("./routes/Single");
 const ProjectRouts = require("./routes/projects");
 
 const cors = require("cors");
-
-require("dotenv").config();
- 
 
 var fs = require("fs");
 var path = require("path");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
 
 // Set EJS as templating engine
 app.set("view engine", "ejs");
@@ -40,6 +37,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/User", cors(), UserRoutes);
 
 app.use("/Posts", cors(), PostRoutes);
+app.use("/Single", cors(), SingleRoutes);
 app.use("/Project", cors(), ProjectRouts);
 
 mongoose.set("strictQuery", false);
@@ -50,4 +48,4 @@ app.get("/", (rep, res) => {
 });
 const port = process.env.PORT || 5000;
 
-app.listen(port, () => console.log("server is up and running  "));
+app.listen(port, () => console.log("server is up and running", port));
