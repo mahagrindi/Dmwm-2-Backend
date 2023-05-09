@@ -39,6 +39,7 @@ const ProjectSchema = new mongoose.Schema({
   },
   vueNumber: {
     type: Number,
+    default: 0,
     required: false,
   },
   vueUsers: {
