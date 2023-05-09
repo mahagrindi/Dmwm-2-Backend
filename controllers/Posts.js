@@ -1,6 +1,7 @@
 const Cookies = require("js-cookie");
 const express = require("express");
 const Hashtag = require("../models/hashtag");
+const SignleModule = require("../models/Signle");
 const Post = require("../models/publication");
 const path = require("path");
 const fs = require("fs");
@@ -132,14 +133,13 @@ exports.getPublicationByUserId = async (req, res) => {
     const id = req.params.id;
     const posts = await Post.find({Id_user: id}).exec();
     if (posts.length > 0) {
-       res.json(posts);
-
+      res.json(posts);
     } else {
-       res.status(404).send("No posts found for the given ID.");
+      res.status(404).send("No posts found for the given ID.");
     }
   } catch (err) {
     console.log(err);
-     res.status(500).send("An error occurred while fetching the posts.");
+    res.status(500).send("An error occurred while fetching the posts.");
   }
 };
 exports.PostPublication = async (req, res) => {
@@ -286,15 +286,20 @@ exports.AddTags = async (req, res) => {
 
 exports.deletPost = async (req, res) => {
   console.log("id", req.body.id);
-  const Post = await publicationModel
+     const Post = await publicationModel
     .findByIdAndRemove({_id: req.body.id})
-    .then((Post) => {
+    .then(async (Post) => {
       console.log(Post);
-      res.status(200).json({message: "you deleted Post"});
     })
     .catch((error) => {
       console.log(error);
-    });
+    });  
+  console.log(req.body.idSng);
+  const sing = await SignleModule.findById(req.body.idSng);
+  sing.state = false;
+  await sing.save().then(() => {
+    res.status(200).json({message: "single updated"});
+  });
 };
 
 exports.upateDatePost = async (req, res) => {

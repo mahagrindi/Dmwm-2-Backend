@@ -26,6 +26,7 @@ exports.findUserById = async (req, res) => {
   );
 
   if (user) {
+    console.log(user);
     return res.status(201).send(user);
   } else {
     return res.status(404).send("ID does not exist !!");
