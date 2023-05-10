@@ -1,6 +1,7 @@
 const Cookies = require("js-cookie");
 const express = require("express");
 const Hashtag = require("../models/hashtag");
+const SignleModule = require("../models/Signle");
 const Post = require("../models/publication");
 const path = require("path");
 const fs = require("fs");
@@ -283,19 +284,34 @@ exports.AddTags = async (req, res) => {
   }
 };
 
-exports.deletPost = async (req, res) => {
-  console.log("id", req.body.id);
+exports.deletPostWihSngle = async (req, res) => {
   const Post = await publicationModel
     .findByIdAndRemove({ _id: req.body.id })
     .then((Post) => {
       console.log(Post);
-      res.status(200).json({ message: "you deleted Post" });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  console.log(req.body.idSng);
+  const sing = await SignleModule.findById(req.body.idSng);
+  sing.state = false;
+  await sing.save().then(() => {
+    res.status(200).json({ message: "single updated" });
+  });
+};
+
+exports.deleteMyPost = async (req, res) => {
+  const Post = await publicationModel
+    .findByIdAndRemove({ _id: req.body.id })
+    .then(async (Post) => {
+      console.log(Post);
+      res.status(200).json({ message: "single updated" });
     })
     .catch((error) => {
       console.log(error);
     });
 };
-
 exports.upateDatePost = async (req, res) => {
   try {
     const post = await publicationModel.findById(req.body.id);

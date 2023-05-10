@@ -27,16 +27,15 @@ exports.getChallengeById = async (req, res) => {
   }
 };
 
-
 exports.winner = async (req, res) => {
   try {
     const challenge = await ChallengeModels.findById(req.body.id);
-  challenge.winner = req.body.id_user ;
-  console.log('====================================');
-  console.log(challenge);
-  console.log('====================================');
-  challenge.save();
-  res.status(200).json({message: "okkkk "});;
+    challenge.winner = req.body.id_user;
+    console.log("====================================");
+    console.log(challenge);
+    console.log("====================================");
+    challenge.save();
+    res.status(200).json({message: "okkkk "});
   } catch (err) {
     res.status(500).json({
       errorMessage: "Please try again later",
@@ -126,4 +125,14 @@ exports.SendChallenge = async (req, res) => {
   await chl.save().then(() => {
     res.status(200).json({message: "okkkk "});
   });
+};
+
+exports.deleteChallenge = async (req, res) => {
+  const challeng = await ChallengeModels.findByIdAndRemove({_id: req.body.id})
+    .then(async (challeng) => {
+      res.status(200).json({message: "single updated"});
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };

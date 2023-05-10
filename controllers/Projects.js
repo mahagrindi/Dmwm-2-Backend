@@ -1,11 +1,9 @@
 const projectModels = require("../models/project");
 const Cookies = require("js-cookie");
-const express = require("express");
 const Hashtag = require("../models/hashtag");
 const path = require("path");
 const fs = require("fs");
 var imgModel = require("../models/Image");
-var publicationModel = require("../models/publication");
 const axios = require("axios");
 const csrftoken = Cookies.get("csrftoken");
 axios.defaults.headers.common["X-CSRFToken"] = csrftoken;
@@ -131,4 +129,15 @@ exports.GetProject = async (req, res) => {
       errorMessage: "Please try again later",
     });
   }
+};
+exports.updateProject = async (req, res) => {
+  try {
+    const filter = { _id: req.body.id };
+    const update = {
+      vueNumber: req.body.vueNumber,
+      vueUsers: req.body.vueUsers,
+    };
+    await projectModels.findOneAndUpdate(filter, update);
+    res.status(200).send({ msg: "ok !" });
+  } catch (error) {}
 };

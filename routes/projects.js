@@ -13,5 +13,6 @@ router.post(
 router.get("/GetProjects", ProjectControllers.GetProject);
 router.get("/getProjects/:id", ProjectControllers.getProjectsByUserId);
 router.delete("/deleteProject", ProjectControllers.deletProject);
+router.patch("/updateProject", ProjectControllers.updateProject);
 
 module.exports = router;
