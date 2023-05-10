@@ -285,15 +285,14 @@ exports.AddTags = async (req, res) => {
 };
 
 exports.deletPostWihSngle = async (req, res) => {
-  
-     const Post = await publicationModel
+  const Post = await publicationModel
     .findByIdAndRemove({_id: req.body.id})
     .then(async (Post) => {
       console.log(Post);
     })
     .catch((error) => {
       console.log(error);
-    });  
+    });
   console.log(req.body.idSng);
   const sing = await SignleModule.findById(req.body.idSng);
   sing.state = false;
@@ -302,19 +301,16 @@ exports.deletPostWihSngle = async (req, res) => {
   });
 };
 
-
 exports.deleteMyPost = async (req, res) => {
-  
   const Post = await publicationModel
- .findByIdAndRemove({_id: req.body.id})
- .then(async (Post) => {
-   console.log(Post);
- res.status(200).json({message: "single updated"});
-
- })
- .catch((error) => {
-   console.log(error);
- });    
+    .findByIdAndRemove({_id: req.body.id})
+    .then(async (Post) => {
+      console.log(Post);
+      res.status(200).json({message: "single updated"});
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 exports.upateDatePost = async (req, res) => {
   try {
