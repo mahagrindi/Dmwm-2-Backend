@@ -10,6 +10,7 @@ const axios = require("axios");
 const csrftoken = Cookies.get("csrftoken");
 axios.defaults.headers.common["X-CSRFToken"] = csrftoken;
 const { ObjectId } = require("mongodb");
+const Project = require("../models/project");
 
 exports.PostProject = async (req, res) => {
   verification = true;
@@ -80,6 +81,23 @@ exports.PostProject = async (req, res) => {
   await project.save().then(() => {
     res.status(200).json({ message: "post added" });
   });
+};
+
+exports.getProjectsByUserId = async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log("mahaaaaa", id);
+    const projects = await Project.find({ Id_user: id }).exec();
+    console.log("dddd", projects);
+    if (projects.length > 0) {
+      res.json(projects);
+    } else {
+      res.status(404).send("No projects found for the given ID.");
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("An error occurred while fetching the projects.");
+  }
 };
 
 exports.deletProject = async (req, res) => {

@@ -6,11 +6,12 @@ const upload = require("../Midellware/multer");
 
 router.post(
   "/PostPrpject",
-  upload.fields([{name: "images"}]),
+  upload.fields([{ name: "images" }]),
   ProjectControllers.PostProject
 );
 
-
-router.get("/GetProjects" , ProjectControllers.GetProject);
+router.get("/GetProjects", ProjectControllers.GetProject);
+router.get("/getProjects/:id", ProjectControllers.getProjectsByUserId);
 router.delete("/deleteProject", ProjectControllers.deletProject);
+
 module.exports = router;
